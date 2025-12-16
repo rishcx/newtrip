@@ -52,7 +52,19 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+  			cyan: {
+  				'400': '#06b6d4',
+  				'500': '#0891b2',
+  			},
+  			magenta: {
+  				'400': '#ec4899',
+  				'500': '#db2777',
+  			},
+  			yellow: {
+  				'400': '#fbbf24',
+  				'500': '#f59e0b',
+  			},
   		},
   		keyframes: {
   			'accordion-down': {
