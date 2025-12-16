@@ -44,6 +44,7 @@ const Checkout = () => {
 
   const getAuthToken = () => {
     // Get JWT token from localStorage (set by Supabase auth)
+    // Returns empty string if not logged in (guest checkout allowed)
     return localStorage.getItem('supabase.auth.token') || '';
   };
 
@@ -59,17 +60,8 @@ const Checkout = () => {
 
     setLoading(true);
     try {
-      // Get auth token
+      // Get auth token (optional - guest checkout allowed)
       const token = getAuthToken();
-      if (!token) {
-        toast({
-          title: "Authentication required",
-          description: "Please login to proceed with checkout",
-          variant: "destructive"
-        });
-        navigate('/login');
-        return;
-      }
 
       // Prepare order items
       const orderItems = cart.map(item => ({
@@ -80,18 +72,22 @@ const Checkout = () => {
       }));
 
       // Create order via backend
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add auth header only if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const response = await axios.post(
         `${BACKEND_URL}/payments/create-order`,
         {
           amount: total * 1.1, // Include tax
           items: orderItems
         },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
+        { headers }
       );
 
       const { order_id, razorpay_order, amount } = response.data;
@@ -142,6 +138,16 @@ const Checkout = () => {
     try {
       const token = getAuthToken();
       
+      // Prepare headers
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      
+      // Add auth header only if token exists
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       // Verify payment with backend
       const verifyResponse = await axios.post(
         `${BACKEND_URL}/payments/verify`,
@@ -151,12 +157,7 @@ const Checkout = () => {
           razorpay_signature: razorpayResponse.razorpay_signature,
           order_id: orderId
         },
-        {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
+        { headers }
       );
 
       if (verifyResponse.data.success) {

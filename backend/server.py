@@ -313,8 +313,13 @@ async def verify_payment(
 ):
     """Verify Razorpay payment and update order status"""
     try:
-        # Verify order belongs to user
-        order_response = supabase.table("orders").select("*").eq("id", payment_data.order_id).eq("user_id", user_id).execute()
+        # Verify order belongs to user (or is a guest order)
+        if user_id == "guest_user":
+            # For guest users, just check if order exists
+            order_response = supabase.table("orders").select("*").eq("id", payment_data.order_id).execute()
+        else:
+            # For authenticated users, verify ownership
+            order_response = supabase.table("orders").select("*").eq("id", payment_data.order_id).eq("user_id", user_id).execute()
         
         if not order_response.data:
             raise HTTPException(status_code=404, detail="Order not found")
