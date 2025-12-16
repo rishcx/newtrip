@@ -15,8 +15,9 @@ create table if not exists profiles (
 );
 
 -- Create products table
+-- Using text IDs to match frontend mock data
 create table if not exists products (
-  id uuid primary key default uuid_generate_v4(),
+  id text primary key,
   name text not null,
   description text,
   price numeric(10, 2) not null,
@@ -46,7 +47,7 @@ create table if not exists orders (
 create table if not exists order_items (
   id uuid primary key default uuid_generate_v4(),
   order_id uuid not null references orders(id) on delete cascade,
-  product_id uuid not null references products(id),
+  product_id text not null references products(id),  -- Changed to text to match products table
   quantity integer not null check (quantity > 0),
   unit_price numeric(10, 2) not null,
   size text,
@@ -61,22 +62,26 @@ alter table orders enable row level security;
 alter table order_items enable row level security;
 
 -- RLS Policies for profiles
+DROP POLICY IF EXISTS "Users can read their own profile" ON profiles;
 create policy "Users can read their own profile"
   on profiles for select
   to authenticated
   using (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can update their own profile" ON profiles;
 create policy "Users can update their own profile"
   on profiles for update
   to authenticated
   using (auth.uid() = id);
 
+DROP POLICY IF EXISTS "Users can insert their own profile" ON profiles;
 create policy "Users can insert their own profile"
   on profiles for insert
   to authenticated
   with check (auth.uid() = id);
 
 -- RLS Policies for products (public read access)
+DROP POLICY IF EXISTS "Anyone can read products" ON products;
 create policy "Anyone can read products"
   on products for select
   to authenticated, anon
@@ -84,6 +89,7 @@ create policy "Anyone can read products"
 
 -- RLS Policies for orders
 -- Allow public access for guest checkout, authenticated users can access their own orders
+DROP POLICY IF EXISTS "Users can read their own orders" ON orders;
 create policy "Users can read their own orders"
   on orders for select
   to authenticated, anon
@@ -92,11 +98,13 @@ create policy "Users can read their own orders"
     (auth.uid()::text = user_id)
   );
 
+DROP POLICY IF EXISTS "Anyone can create orders" ON orders;
 create policy "Anyone can create orders"
   on orders for insert
   to authenticated, anon
   with check (true);
 
+DROP POLICY IF EXISTS "Users can update their own orders" ON orders;
 create policy "Users can update their own orders"
   on orders for update
   to authenticated, anon
@@ -107,6 +115,7 @@ create policy "Users can update their own orders"
 
 -- RLS Policies for order_items
 -- Allow public access for guest checkout
+DROP POLICY IF EXISTS "Users can read their order items" ON order_items;
 create policy "Users can read their order items"
   on order_items for select
   to authenticated, anon
@@ -117,19 +126,30 @@ create policy "Users can read their order items"
     )
   );
 
+DROP POLICY IF EXISTS "Anyone can create order items" ON order_items;
 create policy "Anyone can create order items"
   on order_items for insert
   to authenticated, anon
   with check (true);
 
--- Seed products from mock data
-insert into products (name, description, price, image_url, category, sizes, colors, stock_quantity) values
-  ('Cosmic Vortex Hoodie', 'Dive into the void with our signature cosmic vortex design. Ultra-soft fleece with trippy all-over print.', 89.99, 'https://images.unsplash.com/photo-1579572331145-5e53b299c64e', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Black', 'Purple', 'Cyan'], 50),
-  ('Neon Dreams Tee', 'Electric vibes only. Premium cotton tee with glow-in-the-dark psychedelic print.', 45.99, 'https://images.unsplash.com/photo-1564557287817-3785e38ec1f5', 'tees', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Grey', 'Black', 'White'], 100),
-  ('Acid Trip Hoodie', 'Bold colors meet surreal patterns. This hoodie is a journey through liquid rainbows.', 95.99, 'https://images.unsplash.com/photo-1609873814058-a8928924184a', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Yellow', 'Green', 'Multi'], 30),
-  ('Urban Mystic Hoodie', 'Street meets spiritual. Oversized fit with mystical mandala embroidery.', 92.99, 'https://images.unsplash.com/photo-1578768079052-aa76e52ff62e', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Brown', 'Tan', 'Olive'], 40),
-  ('Liquid Reality Tee', 'Reality melts away. Distorted graphics that shift with every move.', 42.99, 'https://images.pexels.com/photos/1036396/pexels-photo-1036396.jpeg', 'tees', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Black', 'Navy', 'Charcoal'], 80),
-  ('Dimension Shift Hoodie', 'Step between worlds. Color-shifting fabric with holographic details.', 98.99, 'https://images.pexels.com/photos/1868471/pexels-photo-1868471.jpeg', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Multi', 'Black', 'White'], 25);
+-- Seed products from mock data (with IDs matching frontend)
+-- Use ON CONFLICT to allow re-running this script
+insert into products (id, name, description, price, image_url, category, sizes, colors, stock_quantity) values
+  ('1', 'Cosmic Vortex Hoodie', 'Dive into the void with our signature cosmic vortex design. Ultra-soft fleece with trippy all-over print.', 89.99, 'https://images.unsplash.com/photo-1579572331145-5e53b299c64e', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Black', 'Purple', 'Cyan'], 50),
+  ('2', 'Neon Dreams Tee', 'Electric vibes only. Premium cotton tee with glow-in-the-dark psychedelic print.', 45.99, 'https://images.unsplash.com/photo-1564557287817-3785e38ec1f5', 'tees', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Grey', 'Black', 'White'], 100),
+  ('3', 'Acid Trip Hoodie', 'Bold colors meet surreal patterns. This hoodie is a journey through liquid rainbows.', 95.99, 'https://images.unsplash.com/photo-1609873814058-a8928924184a', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Yellow', 'Green', 'Multi'], 30),
+  ('4', 'Urban Mystic Hoodie', 'Street meets spiritual. Oversized fit with mystical mandala embroidery.', 92.99, 'https://images.unsplash.com/photo-1578768079052-aa76e52ff62e', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Brown', 'Tan', 'Olive'], 40),
+  ('5', 'Liquid Reality Tee', 'Reality melts away. Distorted graphics that shift with every move.', 42.99, 'https://images.pexels.com/photos/1036396/pexels-photo-1036396.jpeg', 'tees', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Black', 'Navy', 'Charcoal'], 80),
+  ('6', 'Dimension Shift Hoodie', 'Step between worlds. Color-shifting fabric with holographic details.', 98.99, 'https://images.pexels.com/photos/1868471/pexels-photo-1868471.jpeg', 'hoodies', ARRAY['S', 'M', 'L', 'XL', 'XXL'], ARRAY['Multi', 'Black', 'White'], 25)
+ON CONFLICT (id) DO UPDATE SET
+  name = EXCLUDED.name,
+  description = EXCLUDED.description,
+  price = EXCLUDED.price,
+  image_url = EXCLUDED.image_url,
+  category = EXCLUDED.category,
+  sizes = EXCLUDED.sizes,
+  colors = EXCLUDED.colors,
+  stock_quantity = EXCLUDED.stock_quantity;
 
 -- Function to automatically create profile on user signup
 create or replace function public.handle_new_user()
@@ -142,6 +162,7 @@ end;
 $$ language plpgsql security definer;
 
 -- Trigger to create profile on signup
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();

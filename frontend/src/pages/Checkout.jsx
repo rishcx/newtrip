@@ -14,7 +14,7 @@ const RAZORPAY_KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID || '';
 
 const Checkout = () => {
   const navigate = useNavigate();
-  const { session } = useAuth();
+  const { session, user } = useAuth();
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -46,11 +46,22 @@ const Checkout = () => {
 
   const getAuthToken = () => {
     // Get JWT token from Supabase session
-    // Returns empty string if not logged in (guest checkout allowed)
+    // Authentication is required for checkout
     return session?.access_token || '';
   };
 
   const handleCheckout = async () => {
+    // Require authentication
+    if (!session || !user) {
+      toast({
+        title: "Authentication required",
+        description: "Please login or sign up to proceed with checkout",
+        variant: "destructive"
+      });
+      navigate('/login');
+      return;
+    }
+
     if (!RAZORPAY_KEY_ID) {
       toast({
         title: "Payment not configured",
@@ -62,8 +73,19 @@ const Checkout = () => {
 
     setLoading(true);
     try {
-      // Get auth token (optional - guest checkout allowed)
+      // Get auth token (required)
       const token = getAuthToken();
+      
+      if (!token) {
+        toast({
+          title: "Authentication required",
+          description: "Please login to proceed with checkout",
+          variant: "destructive"
+        });
+        navigate('/login');
+        setLoading(false);
+        return;
+      }
 
       // Prepare order items
       const orderItems = cart.map(item => ({
@@ -73,15 +95,11 @@ const Checkout = () => {
         color: item.color
       }));
 
-      // Create order via backend
+      // Create order via backend (authentication required)
       const headers = {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       };
-      
-      // Add auth header only if token exists
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
       
       const response = await axios.post(
         `${BACKEND_URL}/payments/create-order`,
@@ -140,15 +158,15 @@ const Checkout = () => {
     try {
       const token = getAuthToken();
       
-      // Prepare headers
-      const headers = {
-        'Content-Type': 'application/json'
-      };
-      
-      // Add auth header only if token exists
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
+      if (!token) {
+        throw new Error('Authentication required');
       }
+      
+      // Prepare headers (authentication required)
+      const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
       
       // Verify payment with backend
       const verifyResponse = await axios.post(

@@ -6,12 +6,14 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Loader2 } from 'lucide-react';
+import { Chrome } from 'lucide-react';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -96,6 +98,47 @@ const Login = () => {
               )}
             </Button>
           </form>
+
+          <div className="mt-6">
+            <div className="relative">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t border-gray-600"></span>
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-black/80 px-2 text-gray-400">Or continue with</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              onClick={async () => {
+                setGoogleLoading(true);
+                const { error } = await signInWithGoogle();
+                if (error) {
+                  toast({
+                    title: "Google login failed",
+                    description: error.message || "Could not sign in with Google",
+                    variant: "destructive"
+                  });
+                  setGoogleLoading(false);
+                }
+              }}
+              className="w-full mt-4 bg-white hover:bg-gray-100 text-gray-900 font-medium py-6 text-lg flex items-center justify-center space-x-2"
+              disabled={googleLoading}
+            >
+              {googleLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                  Connecting...
+                </>
+              ) : (
+                <>
+                  <Chrome className="w-5 h-5" />
+                  <span>Sign in with Google</span>
+                </>
+              )}
+            </Button>
+          </div>
 
           <div className="mt-6 text-center">
             <p className="text-gray-400">
