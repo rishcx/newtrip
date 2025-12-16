@@ -30,9 +30,10 @@ create table if not exists products (
 );
 
 -- Create orders table
+-- Note: user_id can be a UUID (authenticated user) or text 'guest_user' (guest checkout)
 create table if not exists orders (
   id uuid primary key default uuid_generate_v4(),
-  user_id uuid not null references profiles(id) on delete cascade,
+  user_id text not null,  -- Changed from uuid to text to support 'guest_user'
   status text default 'pending',
   total_amount numeric(10, 2) not null,
   payment_id text,
@@ -82,39 +83,44 @@ create policy "Anyone can read products"
   using (true);
 
 -- RLS Policies for orders
+-- Allow public access for guest checkout, authenticated users can access their own orders
 create policy "Users can read their own orders"
   on orders for select
-  to authenticated
-  using (auth.uid() = user_id);
+  to authenticated, anon
+  using (
+    user_id = 'guest_user' OR 
+    (auth.uid()::text = user_id)
+  );
 
-create policy "Users can create orders"
+create policy "Anyone can create orders"
   on orders for insert
-  to authenticated
-  with check (auth.uid() = user_id);
+  to authenticated, anon
+  with check (true);
 
 create policy "Users can update their own orders"
   on orders for update
-  to authenticated
-  using (auth.uid() = user_id);
+  to authenticated, anon
+  using (
+    user_id = 'guest_user' OR 
+    (auth.uid()::text = user_id)
+  );
 
 -- RLS Policies for order_items
+-- Allow public access for guest checkout
 create policy "Users can read their order items"
   on order_items for select
-  to authenticated
+  to authenticated, anon
   using (
     order_id in (
-      select id from orders where user_id = auth.uid()
+      select id from orders 
+      where user_id = 'guest_user' OR user_id = auth.uid()::text
     )
   );
 
-create policy "Users can create order items"
+create policy "Anyone can create order items"
   on order_items for insert
-  to authenticated
-  with check (
-    order_id in (
-      select id from orders where user_id = auth.uid()
-    )
-  );
+  to authenticated, anon
+  with check (true);
 
 -- Seed products from mock data
 insert into products (name, description, price, image_url, category, sizes, colors, stock_quantity) values

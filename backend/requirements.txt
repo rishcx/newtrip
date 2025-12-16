@@ -76,7 +76,6 @@ starlette==0.37.2
 storage3==2.27.0
 StrEnum==0.4.15
 supabase==2.27.0
-supafunc==0.3.3
 typer==0.20.0
 typing-inspection==0.4.2
 typing_extensions==4.15.0

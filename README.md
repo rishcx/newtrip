@@ -61,7 +61,15 @@ cd frontend
 yarn install
 ```
 
-3. Start the development server:
+3. Create a `.env` file in the `frontend` directory with the following variables:
+```env
+REACT_APP_SUPABASE_URL=your_supabase_url
+REACT_APP_SUPABASE_ANON_KEY=your_supabase_anon_key
+REACT_APP_BACKEND_URL=http://localhost:8000/api
+REACT_APP_RAZORPAY_KEY_ID=your_razorpay_key_id
+```
+
+4. Start the development server:
 ```bash
 yarn start
 ```
@@ -115,6 +123,24 @@ Make sure to set up all required environment variables in `backend/.env`:
 ## Database Setup
 
 Run the SQL script in `backend/supabase_setup.sql` in your Supabase SQL editor to set up the required tables and triggers.
+
+## Authentication
+
+This app uses **Supabase Auth** for user authentication. Users can:
+
+- **Sign up** with email and password at `/signup`
+- **Login** at `/login`
+- **Checkout as guest** (no login required)
+
+### Features:
+- Email/password authentication
+- Automatic profile creation on signup
+- JWT token-based session management
+- Guest checkout support
+
+After signing up, users will receive an email verification link. Once verified, they can log in and their orders will be linked to their account.
+
+The authentication state is managed globally via `AuthContext` and persists across page refreshes.
 
 ## API Endpoints
 

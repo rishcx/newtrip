@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, Menu, X } from 'lucide-react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { ShoppingCart, Menu, X, LogOut, User } from 'lucide-react';
 import { getCartCount } from '../mock';
+import { useAuth } from '../contexts/AuthContext';
+import { Button } from './ui/button';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     updateCartCount();
@@ -77,6 +81,32 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+            
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <span className="text-white text-sm flex items-center space-x-2">
+                  <User className="w-4 h-4" />
+                  <span>{user.email}</span>
+                </span>
+                <Button
+                  onClick={async () => {
+                    await signOut();
+                    navigate('/');
+                  }}
+                  variant="ghost"
+                  className="text-white hover:bg-cyan-500/10 hover:text-cyan-400"
+                >
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button className="bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white">
+                  Login
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -89,6 +119,13 @@ const Navbar = () => {
                 </span>
               )}
             </Link>
+            {!user && (
+              <Link to="/login">
+                <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-magenta-500 text-white">
+                  Login
+                </Button>
+              </Link>
+            )}
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-white p-2 hover:bg-cyan-500/10 rounded-lg transition-all"
@@ -117,6 +154,25 @@ const Navbar = () => {
                 {link.name}
               </Link>
             ))}
+            {user && (
+              <>
+                <div className="pt-4 border-t border-cyan-500/20">
+                  <p className="text-sm text-gray-400 mb-2">{user.email}</p>
+                  <Button
+                    onClick={async () => {
+                      await signOut();
+                      setIsOpen(false);
+                      navigate('/');
+                    }}
+                    variant="ghost"
+                    className="w-full text-white hover:bg-cyan-500/10 hover:text-cyan-400 justify-start"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

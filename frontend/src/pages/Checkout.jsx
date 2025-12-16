@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCart, getCartTotal, clearCart } from '../mock';
 import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
+import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 
 // For Vercel: use relative path since API is on same domain (/api)
@@ -13,6 +14,7 @@ const RAZORPAY_KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID || '';
 
 const Checkout = () => {
   const navigate = useNavigate();
+  const { session } = useAuth();
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -43,9 +45,9 @@ const Checkout = () => {
   };
 
   const getAuthToken = () => {
-    // Get JWT token from localStorage (set by Supabase auth)
+    // Get JWT token from Supabase session
     // Returns empty string if not logged in (guest checkout allowed)
-    return localStorage.getItem('supabase.auth.token') || '';
+    return session?.access_token || '';
   };
 
   const handleCheckout = async () => {
