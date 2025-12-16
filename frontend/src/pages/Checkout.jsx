@@ -5,7 +5,10 @@ import { Loader2, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 import axios from 'axios';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000';
+// For Vercel: use relative path since API is on same domain (/api)
+// For local dev: use full URL (backend runs on port 8000, routes prefixed with /api)
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 
+  (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
 const RAZORPAY_KEY_ID = process.env.REACT_APP_RAZORPAY_KEY_ID || '';
 
 const Checkout = () => {
@@ -78,7 +81,7 @@ const Checkout = () => {
 
       // Create order via backend
       const response = await axios.post(
-        `${BACKEND_URL}/api/payments/create-order`,
+        `${BACKEND_URL}/payments/create-order`,
         {
           amount: total * 1.1, // Include tax
           items: orderItems
@@ -141,7 +144,7 @@ const Checkout = () => {
       
       // Verify payment with backend
       const verifyResponse = await axios.post(
-        `${BACKEND_URL}/api/payments/verify`,
+        `${BACKEND_URL}/payments/verify`,
         {
           razorpay_order_id: razorpayResponse.razorpay_order_id,
           razorpay_payment_id: razorpayResponse.razorpay_payment_id,

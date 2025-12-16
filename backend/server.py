@@ -391,20 +391,26 @@ async def razorpay_webhook(request: Request):
 app.include_router(api_router)
 
 # Configure CORS
+# Get frontend URL from environment or use production URL
+frontend_urls = [
+    settings.frontend_url,
+    "http://localhost:3000",
+    "https://www.trippydrip.co.in",
+    "https://trippydrip.co.in",
+    os.getenv("VERCEL_URL", ""),  # Vercel deployment URL
+    f"https://{os.getenv('VERCEL_URL', '')}",  # With https
+]
+# Filter out empty strings and duplicates
+frontend_urls = list(set([url for url in frontend_urls if url]))
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[settings.frontend_url, "http://localhost:3000"],
+    allow_origins=frontend_urls if frontend_urls else ["*"],  # Allow all in production if no URL set
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 
-@app.on_event("startup")
-async def startup_event():
-    logger.info("Starting TrippyDrip API with Supabase and Razorpay integration")
-
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    logger.info("Shutting down TrippyDrip API")
+# Note: Startup/shutdown events are disabled for serverless (lifespan="off" in Mangum)
+# These will not run in Vercel serverless functions

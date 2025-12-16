@@ -23,6 +23,12 @@ class Settings(BaseSettings):
         env_file_encoding = "utf-8"
         case_sensitive = False
         extra = "ignore"  # Ignore extra fields in .env file
+        
+        # For Vercel/serverless, read from environment variables directly
+        @classmethod
+        def customise_sources(cls, init_settings, env_settings, file_secret_settings):
+            # Prioritize environment variables (for Vercel)
+            return (env_settings, init_settings, file_secret_settings)
 
 
 @lru_cache()
