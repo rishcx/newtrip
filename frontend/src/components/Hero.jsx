@@ -5,19 +5,8 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: 'url(https://images.pexels.com/photos/3824262/pexels-photo-3824262.jpeg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
-        }}
-      >
-        <div className="absolute inset-0 bg-black/60"></div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black"></div>
-      </div>
+      {/* Dimmed overlay for text readability */}
+      <div className="absolute inset-0 bg-black/40 z-0"></div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -32,9 +21,9 @@ const Hero = () => {
           <span className="text-cyan-400 text-sm font-medium">New Collection Drop</span>
         </div>
 
-        <h1 className="hero-title text-6xl sm:text-7xl lg:text-8xl font-black mb-6">
-          Enter The
-          <span className="block trippy-text mt-2">TrippyDrip</span>
+        <h1 className="hero-title text-6xl sm:text-7xl lg:text-8xl trippy-text mt-2">
+          REALITY
+          <span className="block trippy-text mt-2">IS</span>
           <span className="block text-5xl sm:text-6xl lg:text-7xl mt-2">Universe</span>
         </h1>
 

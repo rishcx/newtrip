@@ -7,6 +7,11 @@ module.exports = {
   ],
   theme: {
   	extend: {
+  		fontFamily: {
+  			'funky': ['Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
+  			'lemon-funky': ['Lemon Funky', 'Bungee', 'Righteous', 'cursive', 'sans-serif'],
+  			'trippy': ['Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',

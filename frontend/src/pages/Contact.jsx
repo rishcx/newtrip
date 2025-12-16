@@ -36,7 +36,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-black">
+    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
       {/* Hero */}
       <div className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">

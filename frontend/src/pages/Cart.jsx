@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getCart, updateCartQuantity, removeFromCart, getCartTotal, clearCart } from '../mock';
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 const Cart = () => {
+  const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
 
@@ -45,15 +46,12 @@ const Cart = () => {
   };
 
   const handleCheckout = () => {
-    toast({
-      title: "Checkout",
-      description: "Proceeding to checkout... (Frontend mock)"
-    });
+    navigate('/checkout');
   };
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen pt-20 bg-black flex items-center justify-center">
+      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-zinc-900 flex items-center justify-center">
             <ShoppingBag className="w-16 h-16 text-gray-600" />
@@ -75,7 +73,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black">
+    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-12">

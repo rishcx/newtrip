@@ -44,14 +44,14 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-20 bg-black flex items-center justify-center">
+      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <p className="text-white text-2xl">Product not found</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black">
+    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Breadcrumb */}
         <div className="mb-8 flex items-center space-x-2 text-sm">

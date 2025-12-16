@@ -2,10 +2,24 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Lemon Funky Font */
+/* Uncomment this once you've added the font files to /public/fonts/ */
+/*
+@font-face {
+    font-family: 'Lemon Funky';
+    src: url('/fonts/LemonFunky-Regular.woff2') format('woff2'),
+         url('/fonts/LemonFunky-Regular.woff') format('woff'),
+         url('/fonts/LemonFunky-Regular.otf') format('opentype'),
+         url('/fonts/LemonFunky-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+*/
+
 body {
     margin: 0;
-    font-family:
-        -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    font-family: 'Righteous', 'Fredoka One', -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
         "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
         sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -79,6 +93,29 @@ code {
     }
     body {
         @apply bg-background text-foreground;
+    }
+    h1, h2, h3, h4, h5, h6 {
+        font-family: 'Bungee', 'Righteous', 'Fredoka One', cursive, sans-serif;
+        letter-spacing: 0.02em;
+    }
+    .trippy-text {
+        font-family: 'Bungee', 'Righteous', 'Fredoka One', cursive, sans-serif;
+        letter-spacing: 0.02em;
+    }
+    button, .btn, [role="button"], a[class*="button"], a[class*="btn"] {
+        font-family: 'Righteous', 'Fredoka One', 'Bungee', cursive, sans-serif;
+        letter-spacing: 0.03em;
+        font-weight: 600;
+    }
+    /* Make all headings extra funky */
+    h1 {
+        font-family: 'Bungee', 'Righteous', 'Fredoka One', cursive, sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    h2, h3 {
+        font-family: 'Righteous', 'Bungee', 'Fredoka One', cursive, sans-serif;
+        letter-spacing: 0.03em;
     }
 }
 
