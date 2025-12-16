@@ -12,14 +12,11 @@ sys.path.insert(0, str(backend_path))
 from mangum import Mangum
 from server import app
 
-# Create handler for Vercel
-handler = Mangum(app, lifespan="off")
+# Create Mangum adapter for FastAPI
+mangum_handler = Mangum(app, lifespan="off")
 
-# Vercel Python serverless function handler
-def handler_wrapper(event, context):
-    """Wrapper for Vercel serverless function"""
-    return handler(event, context)
-
-# Export for Vercel (Vercel looks for 'handler' or uses the file name)
-# For /api routes, Vercel will call this file
+# Vercel automatically calls this function for /api/* routes
+def handler(event, context):
+    """Vercel serverless function handler"""
+    return mangum_handler(event, context)
 
