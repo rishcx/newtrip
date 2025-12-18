@@ -85,7 +85,7 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white font-bold py-6 text-lg"
+              className="w-full bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black font-extrabold py-6 text-lg shadow-[0_0_30px_rgba(251,191,36,0.8)] hover:shadow-[0_0_40px_rgba(244,114,182,0.9)] hover:scale-105 transition-transform"
               disabled={loading}
             >
               {loading ? (
