@@ -5,8 +5,8 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Dimmed overlay for text readability */}
-      <div className="absolute inset-0 bg-black/40 z-0"></div>
+      {/* Dimmed overlay for text readability while keeping background visible */}
+      <div className="absolute inset-0 bg-black/20 md:bg-black/30 z-0"></div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -21,13 +21,13 @@ const Hero = () => {
           <span className="text-cyan-400 text-sm font-medium">New Collection Drop</span>
         </div>
 
-        <h1 className="hero-title text-6xl sm:text-7xl lg:text-8xl trippy-text mt-2">
+        <h1 className="hero-title text-4xl sm:text-6xl lg:text-8xl trippy-text mt-2">
           REALITY
           <span className="block trippy-text mt-2">IS</span>
-          <span className="block text-5xl sm:text-6xl lg:text-7xl mt-2">Universe</span>
+          <span className="block text-3xl sm:text-5xl lg:text-7xl mt-2">Universe</span>
         </h1>
 
-        <p className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-2xl text-gray-200 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed">
           Psychedelic streetwear that bends reality. Where neon dreams meet liquid swirls in wearable art.
         </p>
 
@@ -49,10 +49,10 @@ const Hero = () => {
         </div>
 
         {/* Stats */}
-        <div className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+        <div className="mt-14 sm:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 max-w-2xl mx-auto">
           <div className="text-center">
             <div className="text-4xl font-bold text-cyan-400 mb-2">500+</div>
-            <div className="text-gray-400 text-sm">Trippy Designs</div>
+            <div className="text-gray-400 text-sm">Trippy Articles</div>
           </div>
           <div className="text-center">
             <div className="text-4xl font-bold text-magenta-400 mb-2">10K+</div>

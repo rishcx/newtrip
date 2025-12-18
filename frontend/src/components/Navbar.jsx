@@ -102,7 +102,7 @@ const Navbar = () => {
               </div>
             ) : (
               <Link to="/login">
-                <Button className="bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white">
+                <Button className="bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black font-semibold shadow-[0_0_25px_rgba(251,191,36,0.7)] hover:shadow-[0_0_35px_rgba(244,114,182,0.9)] hover:scale-105 transition-transform">
                   Login
                 </Button>
               </Link>
@@ -121,7 +121,10 @@ const Navbar = () => {
             </Link>
             {!user && (
               <Link to="/login">
-                <Button size="sm" className="bg-gradient-to-r from-cyan-500 to-magenta-500 text-white">
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black font-semibold shadow-[0_0_20px_rgba(251,191,36,0.7)] hover:shadow-[0_0_28px_rgba(244,114,182,0.9)] hover:scale-105 transition-transform"
+                >
                   Login
                 </Button>
               </Link>
