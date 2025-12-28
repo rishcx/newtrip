@@ -1,7 +1,8 @@
 {
-  "buildCommand": "cd frontend && yarn build",
+  "buildCommand": "cd frontend && yarn install && yarn build",
   "outputDirectory": "frontend/build",
   "installCommand": "cd frontend && yarn install",
+  "framework": null,
   "functions": {
     "api/**/*.py": {
       "runtime": "python3.9"
@@ -11,6 +12,10 @@
     {
       "source": "/api/(.*)",
       "destination": "/api"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
