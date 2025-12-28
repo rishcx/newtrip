@@ -64,8 +64,25 @@ try:
         test_response = supabase.table("products").select("id").limit(1).execute()
         logger.info("✓ Supabase connection verified successfully")
     except Exception as test_error:
-        logger.warning(f"⚠ Supabase connection test failed: {str(test_error)}")
-        logger.warning("The client is initialized but connection will be tested on first query")
+        error_str = str(test_error)
+        if "Invalid API key" in error_str or "401" in error_str or "unauthorized" in error_str.lower():
+            logger.error("✗ Invalid Supabase API key detected!")
+            logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in backend/.env file")
+            logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
+            print("\n" + "="*60)
+            print("ERROR: Invalid Supabase API Key")
+            print("="*60)
+            print("The SUPABASE_SERVICE_ROLE_KEY in your backend/.env file is incorrect.")
+            print("\nTo fix this:")
+            print("1. Go to https://supabase.com/dashboard")
+            print("2. Select your project")
+            print("3. Go to Settings > API")
+            print("4. Copy the 'service_role' key (NOT the 'anon' key)")
+            print("5. Update SUPABASE_SERVICE_ROLE_KEY in backend/.env")
+            print("="*60 + "\n")
+        else:
+            logger.warning(f"⚠ Supabase connection test failed: {error_str}")
+            logger.warning("The client is initialized but connection will be tested on first query")
         
 except ValueError as ve:
     error_msg = str(ve)
@@ -186,8 +203,14 @@ async def get_products():
         logger.error(f"Error fetching products: {error_msg}")
         logger.error(f"Error type: {type(e).__name__}")
         
-        # Provide more helpful error messages
-        if "nodename nor servname" in error_msg or "Errno 8" in error_msg:
+        # Check for specific Supabase API errors
+        if "Invalid API key" in error_msg or "401" in error_msg or "unauthorized" in error_msg.lower():
+            logger.error("Invalid Supabase API key. Check your SUPABASE_SERVICE_ROLE_KEY in .env file")
+            raise HTTPException(
+                status_code=500,
+                detail="Database authentication failed. Please check your SUPABASE_SERVICE_ROLE_KEY in the backend/.env file. Get it from Supabase Dashboard > Settings > API > service_role key."
+            )
+        elif "nodename nor servname" in error_msg or "Errno 8" in error_msg:
             logger.error("DNS resolution failed. Check your SUPABASE_URL in .env file")
             raise HTTPException(
                 status_code=500, 
@@ -199,7 +222,14 @@ async def get_products():
                 detail="Cannot connect to database. Please check your internet connection and Supabase settings."
             )
         else:
-            raise HTTPException(status_code=500, detail=f"Failed to fetch products: {error_msg}")
+            # Extract more specific error details if available
+            detail_msg = error_msg
+            if hasattr(e, 'message'):
+                detail_msg = e.message
+            elif hasattr(e, 'args') and e.args:
+                detail_msg = str(e.args[0])
+            
+            raise HTTPException(status_code=500, detail=f"Failed to fetch products: {detail_msg}")
 
 
 @api_router.get("/products/{product_id}", response_model=Product)

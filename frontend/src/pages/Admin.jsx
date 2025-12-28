@@ -57,12 +57,18 @@ const Admin = () => {
 
       // Try to parse JSON, but handle non-JSON responses
       let data;
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        // If response is not JSON, use status text
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        try {
+          data = await response.json();
+        } catch (jsonError) {
+          // If JSON parsing fails, create a generic error
+          throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+      } else {
+        // If response is not JSON, read as text (but only once)
         const text = await response.text();
-        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        throw new Error(`Server error: ${response.status} ${response.statusText} - ${text.substring(0, 100)}`);
       }
 
       if (!response.ok) {
