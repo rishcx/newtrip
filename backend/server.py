@@ -210,6 +210,30 @@ class UpdateProductRequest(BaseModel):
 async def root():
     return {"message": "TrippyDrip API is running", "version": "1.0.0"}
 
+# Health check endpoint with Supabase connection test
+@api_router.get("/health")
+async def health_check():
+    """Health check endpoint to verify Supabase connection"""
+    try:
+        # Test Supabase connection
+        test_response = supabase.table("products").select("id").limit(1).execute()
+        return {
+            "status": "healthy",
+            "supabase": "connected",
+            "products_table": "accessible",
+            "environment": "vercel" if os.getenv("VERCEL") else "local"
+        }
+    except Exception as e:
+        error_msg = str(e)
+        is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+        return {
+            "status": "unhealthy",
+            "supabase": "disconnected",
+            "error": error_msg[:200],  # Limit error message length
+            "environment": "vercel" if is_vercel else "local",
+            "hint": "Check SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables" if is_vercel else "Check SUPABASE_SERVICE_ROLE_KEY in backend/.env"
+        }
+
 
 # Product Endpoints
 @api_router.get("/products", response_model=List[Product])
