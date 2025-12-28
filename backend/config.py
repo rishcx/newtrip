@@ -33,6 +33,7 @@ class Settings(BaseSettings):
         @classmethod
         def customise_sources(cls, init_settings, env_settings, file_secret_settings):
             # Prioritize environment variables (for Vercel)
+            # This ensures Vercel environment variables are read first
             return (env_settings, init_settings, file_secret_settings)
 
 

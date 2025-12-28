@@ -37,7 +37,11 @@ try:
     supabase_url = settings.supabase_url.strip() if settings.supabase_url else ""
     
     if not supabase_url:
-        error_msg = "SUPABASE_URL is not set in environment variables. Please add it to backend/.env file"
+        is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+        if is_vercel:
+            error_msg = "SUPABASE_URL is not set. Add it in Vercel project settings → Environment Variables. See VERCEL_ENV_SETUP.md"
+        else:
+            error_msg = "SUPABASE_URL is not set in environment variables. Please add it to backend/.env file"
         print(f"ERROR: {error_msg}")
         raise ValueError(error_msg)
     
@@ -52,7 +56,11 @@ try:
         print("Expected format: https://your-project-ref.supabase.co")
     
     if not settings.supabase_service_role_key:
-        error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set in environment variables"
+        is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+        if is_vercel:
+            error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set. Add it in Vercel project settings → Environment Variables. See VERCEL_ENV_SETUP.md"
+        else:
+            error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set in environment variables"
         print(f"ERROR: {error_msg}")
         raise ValueError(error_msg)
     
@@ -66,19 +74,32 @@ try:
     except Exception as test_error:
         error_str = str(test_error)
         if "Invalid API key" in error_str or "401" in error_str or "unauthorized" in error_str.lower():
+            is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
             logger.error("✗ Invalid Supabase API key detected!")
-            logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in backend/.env file")
-            logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
             print("\n" + "="*60)
             print("ERROR: Invalid Supabase API Key")
             print("="*60)
-            print("The SUPABASE_SERVICE_ROLE_KEY in your backend/.env file is incorrect.")
-            print("\nTo fix this:")
-            print("1. Go to https://supabase.com/dashboard")
-            print("2. Select your project")
-            print("3. Go to Settings > API")
-            print("4. Copy the 'service_role' key (NOT the 'anon' key)")
-            print("5. Update SUPABASE_SERVICE_ROLE_KEY in backend/.env")
+            if is_vercel:
+                logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables")
+                logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
+                print("The SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables is incorrect or missing.")
+                print("\nTo fix this:")
+                print("1. Go to https://vercel.com/dashboard")
+                print("2. Select your project → Settings → Environment Variables")
+                print("3. Update SUPABASE_SERVICE_ROLE_KEY with the correct value")
+                print("4. Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
+                print("5. Redeploy your project")
+                print("\nSee VERCEL_ENV_SETUP.md for detailed instructions.")
+            else:
+                logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in backend/.env file")
+                logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
+                print("The SUPABASE_SERVICE_ROLE_KEY in your backend/.env file is incorrect.")
+                print("\nTo fix this:")
+                print("1. Go to https://supabase.com/dashboard")
+                print("2. Select your project")
+                print("3. Go to Settings > API")
+                print("4. Copy the 'service_role' key (NOT the 'anon' key)")
+                print("5. Update SUPABASE_SERVICE_ROLE_KEY in backend/.env")
             print("="*60 + "\n")
         else:
             logger.warning(f"⚠ Supabase connection test failed: {error_str}")
@@ -205,10 +226,15 @@ async def get_products():
         
         # Check for specific Supabase API errors
         if "Invalid API key" in error_msg or "401" in error_msg or "unauthorized" in error_msg.lower():
-            logger.error("Invalid Supabase API key. Check your SUPABASE_SERVICE_ROLE_KEY in .env file")
+            is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+            logger.error("Invalid Supabase API key detected!")
+            if is_vercel:
+                detail_msg = "Database authentication failed. Please check your SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables. See VERCEL_ENV_SETUP.md for setup instructions."
+            else:
+                detail_msg = "Database authentication failed. Please check your SUPABASE_SERVICE_ROLE_KEY in the backend/.env file. Get it from Supabase Dashboard > Settings > API > service_role key."
             raise HTTPException(
                 status_code=500,
-                detail="Database authentication failed. Please check your SUPABASE_SERVICE_ROLE_KEY in the backend/.env file. Get it from Supabase Dashboard > Settings > API > service_role key."
+                detail=detail_msg
             )
         elif "nodename nor servname" in error_msg or "Errno 8" in error_msg:
             logger.error("DNS resolution failed. Check your SUPABASE_URL in .env file")
