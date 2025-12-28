@@ -13,6 +13,9 @@ import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Admin from "./pages/Admin";
+import TrippyTales from "./pages/TrippyTales";
+import TrippyTalesPage from "./pages/TrippyTalesPage";
+import BlogDetail from "./pages/BlogDetail";
 import { Toaster } from "./components/ui/toaster";
 
 function App() {
@@ -29,6 +32,9 @@ function App() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/trippy-tales" element={<TrippyTalesPage />} />
+            <Route path="/blog" element={<TrippyTales />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/admin" element={<Admin />} />

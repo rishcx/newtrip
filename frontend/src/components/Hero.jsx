@@ -5,8 +5,8 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 const Hero = () => {
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Dimmed overlay for text readability */}
-      <div className="absolute inset-0 bg-black/40 z-0"></div>
+      {/* Dimmed overlay for text readability while keeping background visible */}
+      <div className="absolute inset-0 bg-black/20 md:bg-black/30 z-0"></div>
 
       {/* Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

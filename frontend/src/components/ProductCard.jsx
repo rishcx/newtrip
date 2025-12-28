@@ -22,7 +22,7 @@ const ProductCard = ({ product }) => {
             <button className="p-3 bg-cyan-500 rounded-full hover:bg-cyan-400 transition-colors">
               <Eye className="w-5 h-5 text-white" />
             </button>
-            <button className="p-3 bg-magenta-500 rounded-full hover:bg-magenta-400 transition-colors">
+            <button className="p-3 rounded-full bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 shadow-[0_0_20px_rgba(251,191,36,0.8)] hover:shadow-[0_0_26px_rgba(244,114,182,0.9)] transition-all duration-200 hover:scale-105">
               <ShoppingCart className="w-5 h-5 text-white" />
             </button>
           </div>

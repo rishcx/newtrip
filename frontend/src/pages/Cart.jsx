@@ -185,7 +185,7 @@ const Cart = () => {
 
               <button
                 onClick={handleCheckout}
-                className="w-full py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white font-bold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all duration-300 mb-4"
+                className="w-full py-4 bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black font-bold text-lg rounded-full hover:scale-105 shadow-[0_0_30px_rgba(251,191,36,0.8)] hover:shadow-[0_0_40px_rgba(244,114,182,0.9)] transition-all duration-300 mb-4"
               >
                 Proceed to Checkout
               </button>

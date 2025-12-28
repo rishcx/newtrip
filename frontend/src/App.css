@@ -20,6 +20,21 @@
     filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.5));
 }
 
+/* Mobile-friendly sizing and layout guardrails */
+:root {
+    /* Scale the base font size between 14px and 16px depending on viewport width */
+    font-size: clamp(14px, 3.5vw, 16px);
+}
+
+body {
+    line-height: 1.6;
+}
+
+.App {
+    /* Avoid unintended horizontal scrolling on small screens */
+    overflow-x: hidden;
+}
+
 @keyframes trippy-gradient {
     0% {
         background-position: 0% center;

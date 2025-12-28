@@ -215,8 +215,8 @@ const ProductDetail = () => {
               disabled={added}
               className={`w-full py-3 sm:py-4 rounded-full font-bold text-base sm:text-lg transition-all duration-300 flex items-center justify-center space-x-2 ${
                 added
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gradient-to-r from-cyan-500 to-magenta-500 text-white hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)]'
+                  ? 'bg-green-500 text-white shadow-[0_0_24px_rgba(34,197,94,0.8)]'
+                  : 'bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black shadow-[0_0_30px_rgba(251,191,36,0.8)] hover:shadow-[0_0_40px_rgba(244,114,182,0.9)] hover:scale-105'
               }`}
             >
               {added ? (
