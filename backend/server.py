@@ -88,8 +88,17 @@ except Exception as e:
     supabase_error = f"Failed to initialize Supabase: {error_msg}"
     # Don't raise - allow the app to start so we can return JSON errors
 
-# Initialize Razorpay client
-razorpay_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
+# Initialize Razorpay client (with graceful failure handling)
+razorpay_client = None
+try:
+    if settings.razorpay_key_id and settings.razorpay_key_secret:
+        razorpay_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
+        logger.info("Razorpay client initialized successfully")
+    else:
+        logger.warning("Razorpay keys not set - payment features will be disabled")
+except Exception as e:
+    logger.error(f"Failed to initialize Razorpay client: {str(e)}")
+    # Don't raise - allow the app to start
 
 # Create the main app
 app = FastAPI(title="TrippyDrip API")
@@ -171,6 +180,17 @@ async def root():
 @api_router.get("/health")
 async def health_check():
     """Health check endpoint to verify Supabase connection"""
+    is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+    
+    if supabase is None:
+        return {
+            "status": "unhealthy",
+            "supabase": "not_initialized",
+            "error": supabase_error or "Supabase client not initialized",
+            "environment": "vercel" if is_vercel else "local",
+            "hint": "Check SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables" if is_vercel else "Check SUPABASE_SERVICE_ROLE_KEY in backend/.env"
+        }
+    
     try:
         # Test Supabase connection
         test_response = supabase.table("products").select("id").limit(1).execute()
@@ -178,11 +198,10 @@ async def health_check():
             "status": "healthy",
             "supabase": "connected",
             "products_table": "accessible",
-            "environment": "vercel" if os.getenv("VERCEL") else "local"
+            "environment": "vercel" if is_vercel else "local"
         }
     except Exception as e:
         error_msg = str(e)
-        is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
         return {
             "status": "unhealthy",
             "supabase": "disconnected",
