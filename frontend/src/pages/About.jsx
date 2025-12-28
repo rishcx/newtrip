@@ -11,11 +11,11 @@ const About = () => {
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-magenta-500/10 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-6xl sm:text-7xl font-black text-white mb-6">
+        <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-4 sm:mb-6">
             About <span className="trippy-text">TrippyDrip</span>
           </h1>
-          <p className="text-xl text-gray-300 leading-relaxed">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed">
             We're not just a streetwear brand. We're a movement, a vibe, a portal to another dimension where fashion meets psychedelic art.
           </p>
         </div>
@@ -23,13 +23,13 @@ const About = () => {
 
       {/* Story Section */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 items-center mb-12 sm:mb-20">
           <div>
-            <h2 className="text-4xl font-black text-white mb-6">Our Story</h2>
-            <p className="text-lg text-gray-300 mb-4 leading-relaxed">
+            <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 sm:mb-6">Our Story</h2>
+            <p className="text-base sm:text-lg text-gray-300 mb-3 sm:mb-4 leading-relaxed">
               Born from the fusion of street culture and psychedelic art, TrippyDrip emerged in 2024 as a response to the ordinary. We saw a world craving color, craving expression, craving that perfect blend of comfort and mind-bending aesthetics.
             </p>
-            <p className="text-lg text-gray-300 leading-relaxed">
+            <p className="text-base sm:text-lg text-gray-300 leading-relaxed">
               Every piece we create is a canvas, every design a journey through liquid rainbows and neon dreams. We're here to make you stand out, feel confident, and embrace the trippy side of life.
             </p>
           </div>
@@ -46,7 +46,7 @@ const About = () => {
         </div>
 
         {/* Values */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-12 sm:mb-20">
           <div className="text-center p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800">
             <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-cyan-500/10 flex items-center justify-center">
               <Sparkles className="w-8 h-8 text-cyan-400" />
@@ -81,9 +81,9 @@ const About = () => {
         </div>
 
         {/* Mission */}
-        <div className="text-center max-w-4xl mx-auto mb-20">
-          <h2 className="text-4xl font-black text-white mb-6">Our Mission</h2>
-          <p className="text-xl text-gray-300 leading-relaxed">
+        <div className="text-center max-w-4xl mx-auto mb-12 sm:mb-20 px-4">
+          <h2 className="text-3xl sm:text-4xl font-black text-white mb-4 sm:mb-6">Our Mission</h2>
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300 leading-relaxed">
             To transform everyday streetwear into wearable art that inspires, energizes, and connects people who dare to be different. We're creating a universe where fashion isn't just about looking good—it's about feeling the energy, embracing the vibes, and expressing your truest, trippiest self.
           </p>
         </div>

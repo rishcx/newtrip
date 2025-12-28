@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings
 from functools import lru_cache
+from typing import Optional
 import os
 
 
@@ -17,6 +18,10 @@ class Settings(BaseSettings):
     
     # Frontend URL
     frontend_url: str
+    
+    # Admin Configuration
+    admin_secret_key: Optional[str] = None
+    admin_email: Optional[str] = None
     
     class Config:
         env_file = ".env"

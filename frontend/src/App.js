@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Admin from "./pages/Admin";
 import TrippyTales from "./pages/TrippyTales";
 import TrippyTalesPage from "./pages/TrippyTalesPage";
 import BlogDetail from "./pages/BlogDetail";
@@ -36,6 +37,7 @@ function App() {
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/admin" element={<Admin />} />
           </Routes>
           <Toaster />
         </BrowserRouter>
