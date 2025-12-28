@@ -45,11 +45,11 @@ const Navbar = () => {
         scrolled ? 'bg-black/80 backdrop-blur-lg border-b border-cyan-500/20' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-16 sm:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="text-3xl font-bold trippy-text">
+            <div className="text-xl sm:text-2xl lg:text-3xl font-bold trippy-text">
               TrippyDrip
             </div>
           </Link>
@@ -83,10 +83,10 @@ const Navbar = () => {
             </Link>
             
             {user ? (
-              <div className="flex items-center space-x-4">
-                <span className="text-white text-sm flex items-center space-x-2">
-                  <User className="w-4 h-4" />
-                  <span>{user.email}</span>
+              <div className="flex items-center space-x-2 sm:space-x-4">
+                <span className="text-white text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 hidden lg:flex">
+                  <User className="w-3 h-3 sm:w-4 sm:h-4" />
+                  <span className="max-w-[120px] truncate">{user.email}</span>
                 </span>
                 <Button
                   onClick={async () => {
@@ -94,15 +94,15 @@ const Navbar = () => {
                     navigate('/');
                   }}
                   variant="ghost"
-                  className="text-white hover:bg-cyan-500/10 hover:text-cyan-400"
+                  className="text-white hover:bg-cyan-500/10 hover:text-cyan-400 text-xs sm:text-sm px-2 sm:px-4"
                 >
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Logout
+                  <LogOut className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
+                  <span className="hidden sm:inline">Logout</span>
                 </Button>
               </div>
             ) : (
               <Link to="/login">
-                <Button className="bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white">
+                <Button className="bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white text-xs sm:text-sm px-3 sm:px-6">
                   Login
                 </Button>
               </Link>

@@ -221,12 +221,12 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <h1 className="text-5xl sm:text-6xl font-black text-white mb-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6 sm:mb-8">
           Checkout
         </h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Order Summary */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800">
@@ -247,7 +247,7 @@ const Checkout = () => {
 
           {/* Payment Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800 sticky top-24">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-zinc-800 lg:sticky lg:top-24">
               <h2 className="text-2xl font-black text-white mb-6">Payment Summary</h2>
               
               <div className="space-y-4 mb-6">

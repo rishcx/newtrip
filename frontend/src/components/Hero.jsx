@@ -21,46 +21,46 @@ const Hero = () => {
           <span className="text-cyan-400 text-sm font-medium">New Collection Drop</span>
         </div>
 
-        <h1 className="hero-title text-6xl sm:text-7xl lg:text-8xl trippy-text mt-2">
+        <h1 className="hero-title text-4xl sm:text-6xl lg:text-7xl xl:text-8xl trippy-text mt-2">
           REALITY
           <span className="block trippy-text mt-2">IS</span>
-          <span className="block text-5xl sm:text-6xl lg:text-7xl mt-2">Universe</span>
+          <span className="block text-3xl sm:text-5xl lg:text-6xl xl:text-7xl mt-2">Universe</span>
         </h1>
 
-        <p className="text-xl sm:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-base sm:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
           Psychedelic streetwear that bends reality. Where neon dreams meet liquid swirls in wearable art.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-4">
           <Link
             to="/shop"
-            className="group relative px-8 py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white font-bold text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] inline-flex items-center space-x-2"
+            className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white font-bold text-base sm:text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] inline-flex items-center justify-center space-x-2"
           >
             <span>Explore Collection</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
           
           <Link
             to="/about"
-            className="px-8 py-4 bg-transparent border-2 border-white text-white font-bold text-lg rounded-full transition-all duration-300 hover:bg-white hover:text-black hover:scale-105"
+            className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-transparent border-2 border-white text-white font-bold text-base sm:text-lg rounded-full transition-all duration-300 hover:bg-white hover:text-black hover:scale-105 text-center"
           >
             Learn More
           </Link>
         </div>
 
         {/* Stats */}
-        <div className="mt-20 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+        <div className="mt-12 sm:mt-20 grid grid-cols-3 gap-4 sm:gap-8 max-w-2xl mx-auto px-4">
           <div className="text-center">
-            <div className="text-4xl font-bold text-cyan-400 mb-2">500+</div>
-            <div className="text-gray-400 text-sm">Trippy Designs</div>
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-cyan-400 mb-1 sm:mb-2">500+</div>
+            <div className="text-gray-400 text-xs sm:text-sm">Trippy Designs</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-magenta-400 mb-2">10K+</div>
-            <div className="text-gray-400 text-sm">Happy Vibers</div>
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-magenta-400 mb-1 sm:mb-2">10K+</div>
+            <div className="text-gray-400 text-xs sm:text-sm">Happy Vibers</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-yellow-400 mb-2">100%</div>
-            <div className="text-gray-400 text-sm">Psychedelic</div>
+            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-yellow-400 mb-1 sm:mb-2">100%</div>
+            <div className="text-gray-400 text-xs sm:text-sm">Psychedelic</div>
           </div>
         </div>
       </div>
