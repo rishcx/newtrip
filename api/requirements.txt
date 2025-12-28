@@ -1,9 +1,0 @@
-fastapi>=0.115.0
-uvicorn>=0.32.0
-supabase>=2.27.0
-python-dotenv>=1.0.0
-razorpay>=1.4.2
-pydantic>=2.10.0
-pydantic-settings>=2.6.0
-mangum>=0.17.0
-setuptools>=80.0.0
