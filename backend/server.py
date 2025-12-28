@@ -24,8 +24,74 @@ load_dotenv(ROOT_DIR / '.env')
 # Get settings
 settings = get_settings()
 
+# Configure logging (must be before Supabase initialization to use logger)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Initialize Supabase client
-supabase: Client = create_client(settings.supabase_url, settings.supabase_service_role_key)
+try:
+    # Validate Supabase URL
+    supabase_url = settings.supabase_url.strip() if settings.supabase_url else ""
+    
+    if not supabase_url:
+        error_msg = "SUPABASE_URL is not set in environment variables. Please add it to backend/.env file"
+        print(f"ERROR: {error_msg}")
+        raise ValueError(error_msg)
+    
+    # Ensure URL has proper format
+    if not supabase_url.startswith("http://") and not supabase_url.startswith("https://"):
+        print(f"WARNING: Supabase URL missing protocol, adding https://")
+        supabase_url = f"https://{supabase_url}"
+    
+    # Validate URL format
+    if ".supabase.co" not in supabase_url:
+        print(f"WARNING: Supabase URL might be incorrect: {supabase_url}")
+        print("Expected format: https://your-project-ref.supabase.co")
+    
+    if not settings.supabase_service_role_key:
+        error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set in environment variables"
+        print(f"ERROR: {error_msg}")
+        raise ValueError(error_msg)
+    
+    logger.info(f"Connecting to Supabase: {supabase_url}")
+    supabase: Client = create_client(supabase_url, settings.supabase_service_role_key)
+    
+    # Test connection with a simple query (non-blocking)
+    try:
+        test_response = supabase.table("products").select("id").limit(1).execute()
+        logger.info("✓ Supabase connection verified successfully")
+    except Exception as test_error:
+        logger.warning(f"⚠ Supabase connection test failed: {str(test_error)}")
+        logger.warning("The client is initialized but connection will be tested on first query")
+        
+except ValueError as ve:
+    error_msg = str(ve)
+    print(f"CONFIGURATION ERROR: {error_msg}")
+    print("Please check your backend/.env file and ensure SUPABASE_URL is set correctly")
+    print("Format: SUPABASE_URL=https://your-project-ref.supabase.co")
+    logger.error(error_msg)
+    raise
+except Exception as e:
+    error_msg = str(e)
+    print(f"SUPABASE INITIALIZATION ERROR: {error_msg}")
+    
+    if "nodename nor servname" in error_msg or "Errno 8" in error_msg:
+        print("\nDNS resolution failed. This usually means:")
+        print("1. SUPABASE_URL is missing or incorrect in backend/.env")
+        print("2. The URL format is wrong (should be: https://xxx.supabase.co)")
+        print("3. There's a network connectivity issue")
+        current_url = settings.supabase_url if hasattr(settings, 'supabase_url') and settings.supabase_url else 'NOT SET'
+        print(f"Current SUPABASE_URL value: {current_url}")
+        print("\nPlease check your backend/.env file and ensure it contains:")
+        print("SUPABASE_URL=https://iojrjuicfhqemwvlvdev.supabase.co")
+    else:
+        print(f"Error type: {type(e).__name__}")
+    
+    logger.error(f"Failed to initialize Supabase client: {error_msg}")
+    raise
 
 # Initialize Razorpay client
 razorpay_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
@@ -35,13 +101,6 @@ app = FastAPI(title="TrippyDrip API")
 
 # Create API router
 api_router = APIRouter(prefix="/api")
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 
 # Pydantic Models
@@ -123,8 +182,24 @@ async def get_products():
         logger.info(f"Public products endpoint: fetched {len(response.data) if response.data else 0} products")
         return response.data
     except Exception as e:
-        logger.error(f"Error fetching products: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch products")
+        error_msg = str(e)
+        logger.error(f"Error fetching products: {error_msg}")
+        logger.error(f"Error type: {type(e).__name__}")
+        
+        # Provide more helpful error messages
+        if "nodename nor servname" in error_msg or "Errno 8" in error_msg:
+            logger.error("DNS resolution failed. Check your SUPABASE_URL in .env file")
+            raise HTTPException(
+                status_code=500, 
+                detail="Database connection failed. Please check SUPABASE_URL configuration."
+            )
+        elif "connection" in error_msg.lower() or "timeout" in error_msg.lower():
+            raise HTTPException(
+                status_code=500,
+                detail="Cannot connect to database. Please check your internet connection and Supabase settings."
+            )
+        else:
+            raise HTTPException(status_code=500, detail=f"Failed to fetch products: {error_msg}")
 
 
 @api_router.get("/products/{product_id}", response_model=Product)

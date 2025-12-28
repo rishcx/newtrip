@@ -34,8 +34,8 @@ const Admin = () => {
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
-  // Store credentials in sessionStorage for this session
-  const handleLogin = () => {
+  // Verify and store credentials
+  const handleLogin = async () => {
     if (!adminKey || !adminId) {
       toast({
         title: "Missing credentials",
@@ -45,25 +45,108 @@ const Admin = () => {
       return;
     }
     
-    // Store in sessionStorage (cleared when browser closes)
-    sessionStorage.setItem('admin_key', adminKey);
-    sessionStorage.setItem('admin_id', adminId);
-    setAuthenticated(true);
-    toast({
-      title: "Admin access granted",
-      description: "You can now manage products"
-    });
+    // Verify credentials by trying to access admin endpoint
+    setLoading(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/admin/products`, {
+        headers: {
+          'X-Admin-Key': adminKey,
+          'X-Admin-ID': adminId
+        }
+      });
+
+      // Try to parse JSON, but handle non-JSON responses
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        // If response is not JSON, use status text
+        const text = await response.text();
+        throw new Error(`Server error: ${response.status} ${response.statusText}`);
+      }
+
+      if (!response.ok) {
+        // Credentials are invalid
+        if (response.status === 401 || response.status === 403) {
+          toast({
+            title: "Invalid credentials",
+            description: data.detail || data.message || "Admin Key or Admin ID is incorrect",
+            variant: "destructive"
+          });
+          setAdminKey('');
+          setAdminId('');
+          return;
+        }
+        throw new Error(data.detail || data.message || `Server error: ${response.status}`);
+      }
+
+      // Credentials are valid - store them
+      sessionStorage.setItem('admin_key', adminKey);
+      sessionStorage.setItem('admin_id', adminId);
+      setAuthenticated(true);
+      toast({
+        title: "Admin access granted",
+        description: "You can now manage products"
+      });
+      
+      // Load products
+      loadProducts();
+    } catch (error) {
+      console.error('Login error:', error);
+      toast({
+        title: "Login failed",
+        description: error.message || "Could not verify credentials. Please check your connection and credentials.",
+        variant: "destructive"
+      });
+      setAdminKey('');
+      setAdminId('');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Check if already authenticated and load products
+  // Check if already authenticated and verify credentials
   React.useEffect(() => {
-    const storedKey = sessionStorage.getItem('admin_key');
-    const storedId = sessionStorage.getItem('admin_id');
-    if (storedKey && storedId) {
-      setAdminKey(storedKey);
-      setAdminId(storedId);
-      setAuthenticated(true);
-    }
+    const verifyStoredCredentials = async () => {
+      const storedKey = sessionStorage.getItem('admin_key');
+      const storedId = sessionStorage.getItem('admin_id');
+      
+      if (storedKey && storedId) {
+        // Verify stored credentials are still valid
+        try {
+          const response = await fetch(`${BACKEND_URL}/admin/products`, {
+            headers: {
+              'X-Admin-Key': storedKey,
+              'X-Admin-ID': storedId
+            }
+          });
+
+          if (response.ok) {
+            // Credentials are valid
+            setAdminKey(storedKey);
+            setAdminId(storedId);
+            setAuthenticated(true);
+          } else {
+            // Credentials are invalid, clear them
+            sessionStorage.removeItem('admin_key');
+            sessionStorage.removeItem('admin_id');
+            // Only show toast if it's an auth error, not a server error
+            if (response.status === 401 || response.status === 403) {
+              toast({
+                title: "Session expired",
+                description: "Please login again",
+                variant: "destructive"
+              });
+            }
+          }
+        } catch (error) {
+          // Network error - don't clear credentials, just don't auto-login
+          console.warn('Could not verify stored credentials:', error);
+        }
+      }
+    };
+
+    verifyStoredCredentials();
   }, []);
 
   // Load products when authenticated
@@ -346,9 +429,17 @@ const Admin = () => {
 
               <Button
                 onClick={handleLogin}
-                className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white font-bold py-4 sm:py-6 text-base sm:text-lg"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white font-bold py-4 sm:py-6 text-base sm:text-lg disabled:opacity-50"
               >
-                Access Admin Panel
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                    Verifying...
+                  </>
+                ) : (
+                  'Access Admin Panel'
+                )}
               </Button>
             </div>
           </div>
