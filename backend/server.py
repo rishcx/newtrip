@@ -31,7 +31,10 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Initialize Supabase client
+# Initialize Supabase client (with graceful failure handling)
+supabase: Optional[Client] = None
+supabase_error: Optional[str] = None
+
 try:
     # Validate Supabase URL
     supabase_url = settings.supabase_url.strip() if settings.supabase_url else ""
@@ -39,97 +42,51 @@ try:
     if not supabase_url:
         is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
         if is_vercel:
-            error_msg = "SUPABASE_URL is not set. Add it in Vercel project settings → Environment Variables. See VERCEL_ENV_SETUP.md"
+            error_msg = "SUPABASE_URL is not set. Add it in Vercel project settings → Environment Variables."
         else:
             error_msg = "SUPABASE_URL is not set in environment variables. Please add it to backend/.env file"
-        print(f"ERROR: {error_msg}")
-        raise ValueError(error_msg)
-    
-    # Ensure URL has proper format
-    if not supabase_url.startswith("http://") and not supabase_url.startswith("https://"):
-        print(f"WARNING: Supabase URL missing protocol, adding https://")
-        supabase_url = f"https://{supabase_url}"
-    
-    # Validate URL format
-    if ".supabase.co" not in supabase_url:
-        print(f"WARNING: Supabase URL might be incorrect: {supabase_url}")
-        print("Expected format: https://your-project-ref.supabase.co")
-    
-    if not settings.supabase_service_role_key:
+        logger.error(f"CONFIGURATION ERROR: {error_msg}")
+        supabase_error = error_msg
+    elif not settings.supabase_service_role_key:
         is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
         if is_vercel:
-            error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set. Add it in Vercel project settings → Environment Variables. See VERCEL_ENV_SETUP.md"
+            error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set. Add it in Vercel project settings → Environment Variables."
         else:
             error_msg = "SUPABASE_SERVICE_ROLE_KEY is not set in environment variables"
-        print(f"ERROR: {error_msg}")
-        raise ValueError(error_msg)
-    
-    logger.info(f"Connecting to Supabase: {supabase_url}")
-    supabase: Client = create_client(supabase_url, settings.supabase_service_role_key)
-    
-    # Test connection with a simple query (non-blocking)
-    try:
-        test_response = supabase.table("products").select("id").limit(1).execute()
-        logger.info("✓ Supabase connection verified successfully")
-    except Exception as test_error:
-        error_str = str(test_error)
-        if "Invalid API key" in error_str or "401" in error_str or "unauthorized" in error_str.lower():
-            is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
-            logger.error("✗ Invalid Supabase API key detected!")
-            print("\n" + "="*60)
-            print("ERROR: Invalid Supabase API Key")
-            print("="*60)
-            if is_vercel:
-                logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables")
-                logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
-                print("The SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables is incorrect or missing.")
-                print("\nTo fix this:")
-                print("1. Go to https://vercel.com/dashboard")
-                print("2. Select your project → Settings → Environment Variables")
-                print("3. Update SUPABASE_SERVICE_ROLE_KEY with the correct value")
-                print("4. Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
-                print("5. Redeploy your project")
-                print("\nSee VERCEL_ENV_SETUP.md for detailed instructions.")
-            else:
-                logger.error("Please check your SUPABASE_SERVICE_ROLE_KEY in backend/.env file")
-                logger.error("Get the correct key from: Supabase Dashboard > Settings > API > service_role key")
-                print("The SUPABASE_SERVICE_ROLE_KEY in your backend/.env file is incorrect.")
-                print("\nTo fix this:")
-                print("1. Go to https://supabase.com/dashboard")
-                print("2. Select your project")
-                print("3. Go to Settings > API")
-                print("4. Copy the 'service_role' key (NOT the 'anon' key)")
-                print("5. Update SUPABASE_SERVICE_ROLE_KEY in backend/.env")
-            print("="*60 + "\n")
-        else:
-            logger.warning(f"⚠ Supabase connection test failed: {error_str}")
-            logger.warning("The client is initialized but connection will be tested on first query")
+        logger.error(f"CONFIGURATION ERROR: {error_msg}")
+        supabase_error = error_msg
+    else:
+        # Ensure URL has proper format
+        if not supabase_url.startswith("http://") and not supabase_url.startswith("https://"):
+            logger.warning("Supabase URL missing protocol, adding https://")
+            supabase_url = f"https://{supabase_url}"
         
-except ValueError as ve:
-    error_msg = str(ve)
-    print(f"CONFIGURATION ERROR: {error_msg}")
-    print("Please check your backend/.env file and ensure SUPABASE_URL is set correctly")
-    print("Format: SUPABASE_URL=https://your-project-ref.supabase.co")
-    logger.error(error_msg)
-    raise
+        # Validate URL format
+        if ".supabase.co" not in supabase_url:
+            logger.warning(f"Supabase URL might be incorrect: {supabase_url}")
+        
+        logger.info(f"Connecting to Supabase: {supabase_url}")
+        supabase = create_client(supabase_url, settings.supabase_service_role_key)
+        
+        # Test connection with a simple query (non-blocking)
+        try:
+            test_response = supabase.table("products").select("id").limit(1).execute()
+            logger.info("✓ Supabase connection verified successfully")
+        except Exception as test_error:
+            error_str = str(test_error)
+            if "Invalid API key" in error_str or "401" in error_str or "unauthorized" in error_str.lower():
+                is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+                logger.error("✗ Invalid Supabase API key detected!")
+                supabase_error = "Invalid Supabase API key. Check SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables."
+            else:
+                logger.warning(f"⚠ Supabase connection test failed: {error_str}")
+                logger.warning("The client is initialized but connection will be tested on first query")
+                
 except Exception as e:
     error_msg = str(e)
-    print(f"SUPABASE INITIALIZATION ERROR: {error_msg}")
-    
-    if "nodename nor servname" in error_msg or "Errno 8" in error_msg:
-        print("\nDNS resolution failed. This usually means:")
-        print("1. SUPABASE_URL is missing or incorrect in backend/.env")
-        print("2. The URL format is wrong (should be: https://xxx.supabase.co)")
-        print("3. There's a network connectivity issue")
-        current_url = settings.supabase_url if hasattr(settings, 'supabase_url') and settings.supabase_url else 'NOT SET'
-        print(f"Current SUPABASE_URL value: {current_url}")
-        print("\nPlease check your backend/.env file and ensure it contains:")
-        print("SUPABASE_URL=https://iojrjuicfhqemwvlvdev.supabase.co")
-    else:
-        print(f"Error type: {type(e).__name__}")
-    
-    logger.error(f"Failed to initialize Supabase client: {error_msg}")
-    raise
+    logger.error(f"SUPABASE INITIALIZATION ERROR: {error_msg}")
+    supabase_error = f"Failed to initialize Supabase: {error_msg}"
+    # Don't raise - allow the app to start so we can return JSON errors
 
 # Initialize Razorpay client
 razorpay_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
@@ -239,6 +196,16 @@ async def health_check():
 @api_router.get("/products", response_model=List[Product])
 async def get_products():
     """Get all products"""
+    # Check if Supabase is initialized
+    if supabase is None:
+        is_vercel = os.getenv("VERCEL") == "1" or os.getenv("VERCEL_ENV")
+        error_detail = supabase_error or "Supabase client not initialized"
+        if is_vercel:
+            detail_msg = f"Database not configured. {error_detail}. Please check your SUPABASE_SERVICE_ROLE_KEY in Vercel environment variables."
+        else:
+            detail_msg = f"Database not configured. {error_detail}. Please check your backend/.env file."
+        raise HTTPException(status_code=500, detail=detail_msg)
+    
     try:
         response = supabase.table("products").select("*").execute()
         logger.info(f"Public products endpoint: fetched {len(response.data) if response.data else 0} products")
