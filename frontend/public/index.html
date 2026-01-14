@@ -43,19 +43,35 @@
                 background: rgba(0, 0, 0, 0.25);
                 z-index: -1;
             }
+
+            /* Mobile: avoid janky fixed backgrounds while scrolling */
+            @media (max-width: 768px) {
+                body {
+                    background-attachment: scroll;
+                    background-position: center top;
+                }
+                body::before {
+                    position: absolute;
+                }
+            }
         </style>
     </head>
     <body>
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
         <script>
-            // Ensure background image is set
+            // Ensure background image is set, with smoother behavior on mobile
             document.body.style.backgroundImage = "url('/trippydrip-bg.jpg')";
             document.body.style.backgroundSize = "cover";
             document.body.style.backgroundPosition = "center";
             document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundAttachment = "fixed";
             document.body.style.minHeight = "100vh";
+
+            if (window.innerWidth > 768) {
+                document.body.style.backgroundAttachment = "fixed";
+            } else {
+                document.body.style.backgroundAttachment = "scroll";
+            }
         </script>
         <!--
       This HTML file is a template.
