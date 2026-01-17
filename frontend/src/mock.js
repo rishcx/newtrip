@@ -60,6 +60,46 @@ export const products = [
     description: 'Step between worlds. Color-shifting fabric with holographic details.',
     sizes: ['S', 'M', 'L', 'XL', 'XXL'],
     colors: ['Multi', 'Black', 'White']
+  },
+  {
+    id: '7',
+    name: 'Dreams Web Tee',
+    price: 49.99,
+    category: 'tees',
+    image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab',
+    description: 'In my dreams, I go... A dark, trippy spider web design with gothic vibes. Perfect for those who walk between dimensions.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'Grey', 'Red']
+  },
+  {
+    id: '8',
+    name: 'Mushroom Dreams Hoodie',
+    price: 94.99,
+    category: 'hoodies',
+    image: 'https://images.unsplash.com/photo-1606041008023-472dfb5e8f11',
+    description: 'Nature meets psychedelia. Minimalist figures on mushrooms with warm orange and yellow cosmic vibes. Connect with the earth and beyond.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Orange', 'Yellow', 'Multi']
+  },
+  {
+    id: '9',
+    name: 'Kindred Spirits Tee',
+    price: 47.99,
+    category: 'tees',
+    image: 'https://images.unsplash.com/photo-1446776877081-d282a0f896e2',
+    description: 'Float through the cosmos with our astronaut design. For kindred spirits exploring the universe together. Space vibes, infinite possibilities.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Navy', 'Black', 'Deep Blue']
+  },
+  {
+    id: '10',
+    name: 'Tattoo Show Hoodie',
+    price: 96.99,
+    category: 'hoodies',
+    image: 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3',
+    description: 'Edgy tattoo-style design with traditional flash art vibes. Distressed, grunge aesthetic meets trippy streetwear. For the rebels and dreamers.',
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    colors: ['Black', 'White', 'Grey']
   }
 ];
 

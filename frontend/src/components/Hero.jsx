@@ -21,10 +21,10 @@ const Hero = () => {
           <span className="text-cyan-400 text-sm font-medium">New Collection Drop</span>
         </div>
 
-        <h1 className="hero-title text-4xl sm:text-6xl lg:text-8xl trippy-text mt-2">
-          REALITY
-          <span className="block trippy-text mt-2">IS</span>
-          <span className="block text-3xl sm:text-5xl lg:text-7xl mt-2">Universe</span>
+        <h1 className="hero-title text-4xl sm:text-6xl lg:text-8xl mt-2">
+          <span className="glitch-text" data-text="A GLITCH">A GLITCH</span>
+          <span className="block glitch-text-in mt-2" data-text="in">in</span>
+          <span className="block glitch-text text-3xl sm:text-5xl lg:text-7xl mt-2" data-text="A MATRIX">A MATRIX</span>
         </h1>
 
         <p className="text-lg sm:text-2xl text-gray-200 mb-10 sm:mb-12 max-w-3xl mx-auto leading-relaxed">

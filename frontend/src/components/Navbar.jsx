@@ -48,8 +48,21 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <div className="text-3xl font-bold trippy-text">
+          <Link to="/" className="flex items-center space-x-2 group hover:opacity-80 transition-opacity">
+            <img 
+              src="/trippydrip-logo.png" 
+              alt="TrippyDrip Logo" 
+              className="h-10 sm:h-12 md:h-14 w-auto object-contain drop-shadow-lg"
+              onError={(e) => {
+                // Hide image and show text fallback if image not found
+                e.target.style.display = 'none';
+                const fallback = e.target.nextElementSibling;
+                if (fallback) {
+                  fallback.style.display = 'block';
+                }
+              }}
+            />
+            <div className="text-2xl sm:text-3xl font-bold trippy-text" style={{ display: 'none' }}>
               TrippyDrip
             </div>
           </Link>

@@ -18,7 +18,10 @@ const BlogCard = ({ blog }) => {
         <img
           src={blog.image}
           alt={blog.title}
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
         />
         
         {/* Category Badge */}

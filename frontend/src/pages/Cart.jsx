@@ -99,7 +99,10 @@ const Cart = () => {
                     <img
                       src={item.image}
                       alt={item.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
+                      style={{ transform: 'translateZ(0)' }}
                     />
                   </div>
 

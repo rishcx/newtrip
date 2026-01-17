@@ -21,17 +21,34 @@
         <title>TrippyDrip | E-commerce App</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Fredoka+One&family=Bangers&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Fredoka+One&family=Bangers&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <style>
+            * {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+            }
+            
+            html {
+                scroll-behavior: smooth;
+                -webkit-overflow-scrolling: touch;
+            }
+            
             body {
                 background-image: url('/trippydrip-bg.jpg');
                 background-size: cover;
                 background-position: center;
                 background-repeat: no-repeat;
                 background-attachment: fixed;
+                background-clip: border-box;
                 min-height: 100vh;
                 position: relative;
+                overflow-x: hidden;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                backface-visibility: hidden;
+                -webkit-backface-visibility: hidden;
             }
+            
             body::before {
                 content: '';
                 position: fixed;
@@ -39,19 +56,17 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                /* Slightly lighter overlay so the trippy background is more visible */
                 background: rgba(0, 0, 0, 0.25);
                 z-index: -1;
+                transform: translateZ(0);
+                -webkit-transform: translateZ(0);
+                will-change: transform;
             }
-
-            /* Mobile: avoid janky fixed backgrounds while scrolling */
-            @media (max-width: 768px) {
+            
+            /* Ensure fixed background works on all devices */
+            @supports (-webkit-overflow-scrolling: touch) {
                 body {
-                    background-attachment: scroll;
-                    background-position: center top;
-                }
-                body::before {
-                    position: absolute;
+                    background-attachment: fixed;
                 }
             }
         </style>
@@ -60,18 +75,30 @@
         <noscript>You need to enable JavaScript to run this app.</noscript>
         <div id="root"></div>
         <script>
-            // Ensure background image is set, with smoother behavior on mobile
-            document.body.style.backgroundImage = "url('/trippydrip-bg.jpg')";
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundPosition = "center";
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.minHeight = "100vh";
-
-            if (window.innerWidth > 768) {
-                document.body.style.backgroundAttachment = "fixed";
-            } else {
-                document.body.style.backgroundAttachment = "scroll";
-            }
+            // Optimize background with fixed attachment for smooth scrolling
+            (function() {
+                const body = document.body;
+                body.style.backgroundImage = "url('/trippydrip-bg.jpg')";
+                body.style.backgroundSize = "cover";
+                body.style.backgroundPosition = "center";
+                body.style.backgroundRepeat = "no-repeat";
+                body.style.backgroundAttachment = "fixed";
+                body.style.minHeight = "100vh";
+                body.style.transform = "translateZ(0)";
+                
+                // Use requestAnimationFrame for smooth updates
+                let ticking = false;
+                function updateBackground() {
+                    if (!ticking) {
+                        window.requestAnimationFrame(function() {
+                            body.style.backgroundAttachment = "fixed";
+                            ticking = false;
+                        });
+                        ticking = true;
+                    }
+                }
+                window.addEventListener('scroll', updateBackground, { passive: true });
+            })();
         </script>
         <!--
       This HTML file is a template.
