@@ -22,11 +22,19 @@ const Navbar = () => {
     };
     window.addEventListener('scroll', handleScroll);
 
+    // Lock body scroll when menu is open
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
     return () => {
       window.removeEventListener('cartUpdated', updateCartCount);
       window.removeEventListener('scroll', handleScroll);
+      document.body.style.overflow = '';
     };
-  }, []);
+  }, [isOpen]);
 
   const updateCartCount = () => {
     setCartCount(getCartCount());
@@ -40,6 +48,7 @@ const Navbar = () => {
   ];
 
   return (
+    <>
     <nav 
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrolled ? 'bg-black/80 backdrop-blur-lg border-b border-cyan-500/20' : 'bg-transparent'
@@ -152,87 +161,94 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Trippy Full-Page Mobile Menu */}
+    </nav>
+      {/* Trippy Full-Page Mobile Menu - Rendered outside nav for proper z-index */}
       {isOpen && (
-        <>
-          {/* Backdrop Overlay */}
+        <div 
+          className="fixed inset-0 bg-black/95 backdrop-blur-md z-[9999] trippy-menu-overlay"
+          onClick={(e) => {
+            // Only close if clicking the backdrop, not the content
+            if (e.target === e.currentTarget) {
+              setIsOpen(false);
+            }
+          }}
+        >
+          {/* Animated Background Orbs */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="trippy-menu-orb-1 absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-40"></div>
+            <div className="trippy-menu-orb-2 absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-40"></div>
+            <div className="trippy-menu-orb-3 absolute top-1/2 left-1/2 w-72 h-72 rounded-full blur-3xl opacity-30"></div>
+          </div>
+
+          {/* Menu Content */}
           <div 
-            className="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] trippy-menu-overlay"
-            onClick={() => setIsOpen(false)}
+            className="relative z-10 h-full flex flex-col items-center justify-center px-6"
+            onClick={(e) => e.stopPropagation()}
           >
-            {/* Animated Background Orbs */}
-            <div className="absolute inset-0 overflow-hidden">
-              <div className="trippy-menu-orb-1 absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-40"></div>
-              <div className="trippy-menu-orb-2 absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-40"></div>
-              <div className="trippy-menu-orb-3 absolute top-1/2 left-1/2 w-72 h-72 rounded-full blur-3xl opacity-30"></div>
-            </div>
+            {/* Close Button */}
+            <button
+              onClick={() => setIsOpen(false)}
+              className="absolute top-6 right-6 p-3 bg-zinc-900/50 hover:bg-zinc-800 rounded-full transition-all duration-300 border border-cyan-500/30 z-20"
+              aria-label="Close menu"
+            >
+              <X className="w-6 h-6 text-white" />
+            </button>
 
-            {/* Menu Content */}
-            <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
-              {/* Close Button */}
-              <button
-                onClick={() => setIsOpen(false)}
-                className="absolute top-6 right-6 p-3 bg-zinc-900/50 hover:bg-zinc-800 rounded-full transition-all duration-300 border border-cyan-500/30"
-              >
-                <X className="w-6 h-6 text-white" />
-              </button>
+            {/* Navigation Links */}
+            <nav className="space-y-6 text-center">
+              {navLinks.map((link, index) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block text-3xl sm:text-4xl font-black transition-all duration-500 trippy-menu-link ${
+                    location.pathname === link.path
+                      ? 'text-cyan-400 scale-110'
+                      : 'text-white hover:text-cyan-400 hover:scale-105'
+                  }`}
+                  style={{ 
+                    animationDelay: `${index * 0.1}s`,
+                    textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+                  }}
+                >
+                  {link.name}
+                </Link>
+              ))}
+            </nav>
 
-              {/* Navigation Links */}
-              <nav className="space-y-6 text-center">
-                {navLinks.map((link, index) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    onClick={() => setIsOpen(false)}
-                    className={`block text-3xl sm:text-4xl font-black transition-all duration-500 trippy-menu-link ${
-                      location.pathname === link.path
-                        ? 'text-cyan-400 scale-110'
-                        : 'text-white hover:text-cyan-400 hover:scale-105'
-                    }`}
-                    style={{ 
-                      animationDelay: `${index * 0.1}s`,
-                      textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
+            {/* User Section */}
+            {user && (
+              <div className="absolute bottom-20 left-0 right-0 px-6 text-center space-y-4">
+                <div className="pt-6 border-t border-cyan-500/30">
+                  <p className="text-sm text-gray-400 mb-4">{user.email}</p>
+                  <Button
+                    onClick={async () => {
+                      await signOut();
+                      setIsOpen(false);
+                      navigate('/');
                     }}
+                    variant="ghost"
+                    className="w-full max-w-xs mx-auto text-white hover:bg-cyan-500/10 hover:text-cyan-400 border border-cyan-500/30"
                   >
-                    {link.name}
-                  </Link>
-                ))}
-              </nav>
-
-              {/* User Section */}
-              {user && (
-                <div className="absolute bottom-20 left-0 right-0 px-6 text-center space-y-4">
-                  <div className="pt-6 border-t border-cyan-500/30">
-                    <p className="text-sm text-gray-400 mb-4">{user.email}</p>
-                    <Button
-                      onClick={async () => {
-                        await signOut();
-                        setIsOpen(false);
-                        navigate('/');
-                      }}
-                      variant="ghost"
-                      className="w-full max-w-xs mx-auto text-white hover:bg-cyan-500/10 hover:text-cyan-400 border border-cyan-500/30"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      Logout
-                    </Button>
-                  </div>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Logout
+                  </Button>
                 </div>
-              )}
+              </div>
+            )}
 
-              {/* Decorative Elements */}
-              <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
-                <div className="flex items-center space-x-2 text-cyan-400/50 text-sm">
-                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
-                  <span>TrippyDrip</span>
-                  <div className="w-2 h-2 rounded-full bg-magenta-400 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                </div>
+            {/* Decorative Elements */}
+            <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+              <div className="flex items-center space-x-2 text-cyan-400/50 text-sm">
+                <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                <span>TrippyDrip</span>
+                <div className="w-2 h-2 rounded-full bg-magenta-400 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
               </div>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </nav>
+    </>
   );
 };
 
