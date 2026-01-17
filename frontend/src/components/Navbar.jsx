@@ -152,45 +152,85 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Trippy Full-Page Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-cyan-500/20">
-          <div className="px-4 py-6 space-y-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
+        <>
+          {/* Backdrop Overlay */}
+          <div 
+            className="fixed inset-0 bg-black/95 backdrop-blur-md z-[100] trippy-menu-overlay"
+            onClick={() => setIsOpen(false)}
+          >
+            {/* Animated Background Orbs */}
+            <div className="absolute inset-0 overflow-hidden">
+              <div className="trippy-menu-orb-1 absolute top-1/4 left-1/4 w-64 h-64 rounded-full blur-3xl opacity-40"></div>
+              <div className="trippy-menu-orb-2 absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full blur-3xl opacity-40"></div>
+              <div className="trippy-menu-orb-3 absolute top-1/2 left-1/2 w-72 h-72 rounded-full blur-3xl opacity-30"></div>
+            </div>
+
+            {/* Menu Content */}
+            <div className="relative z-10 h-full flex flex-col items-center justify-center px-6">
+              {/* Close Button */}
+              <button
                 onClick={() => setIsOpen(false)}
-                className={`block text-lg font-medium transition-colors ${
-                  location.pathname === link.path
-                    ? 'text-cyan-400'
-                    : 'text-white hover:text-cyan-400'
-                }`}
+                className="absolute top-6 right-6 p-3 bg-zinc-900/50 hover:bg-zinc-800 rounded-full transition-all duration-300 border border-cyan-500/30"
               >
-                {link.name}
-              </Link>
-            ))}
-            {user && (
-              <>
-                <div className="pt-4 border-t border-cyan-500/20">
-                  <p className="text-sm text-gray-400 mb-2">{user.email}</p>
-                  <Button
-                    onClick={async () => {
-                      await signOut();
-                      setIsOpen(false);
-                      navigate('/');
+                <X className="w-6 h-6 text-white" />
+              </button>
+
+              {/* Navigation Links */}
+              <nav className="space-y-6 text-center">
+                {navLinks.map((link, index) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsOpen(false)}
+                    className={`block text-3xl sm:text-4xl font-black transition-all duration-500 trippy-menu-link ${
+                      location.pathname === link.path
+                        ? 'text-cyan-400 scale-110'
+                        : 'text-white hover:text-cyan-400 hover:scale-105'
+                    }`}
+                    style={{ 
+                      animationDelay: `${index * 0.1}s`,
+                      textShadow: '0 0 20px rgba(6, 182, 212, 0.5)'
                     }}
-                    variant="ghost"
-                    className="w-full text-white hover:bg-cyan-500/10 hover:text-cyan-400 justify-start"
                   >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
-                  </Button>
+                    {link.name}
+                  </Link>
+                ))}
+              </nav>
+
+              {/* User Section */}
+              {user && (
+                <div className="absolute bottom-20 left-0 right-0 px-6 text-center space-y-4">
+                  <div className="pt-6 border-t border-cyan-500/30">
+                    <p className="text-sm text-gray-400 mb-4">{user.email}</p>
+                    <Button
+                      onClick={async () => {
+                        await signOut();
+                        setIsOpen(false);
+                        navigate('/');
+                      }}
+                      variant="ghost"
+                      className="w-full max-w-xs mx-auto text-white hover:bg-cyan-500/10 hover:text-cyan-400 border border-cyan-500/30"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
                 </div>
-              </>
-            )}
+              )}
+
+              {/* Decorative Elements */}
+              <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2">
+                <div className="flex items-center space-x-2 text-cyan-400/50 text-sm">
+                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+                  <span>TrippyDrip</span>
+                  <div className="w-2 h-2 rounded-full bg-magenta-400 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
+        </>
       )}
     </nav>
   );
