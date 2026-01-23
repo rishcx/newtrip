@@ -9,6 +9,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ||
 
 const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,9 +28,12 @@ const Home = () => {
         }));
         // Get first 3 products for featured section
         setFeaturedProducts(transformedProducts.slice(0, 3));
+        // Store all products for other sections
+        setAllProducts(transformedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
         setFeaturedProducts([]);
+        setAllProducts([]);
       } finally {
         setLoading(false);
       }
@@ -146,48 +150,13 @@ const Home = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {products.slice(6, 10).map((product) => (
+            {allProducts.length > 6 ? allProducts.slice(6, 10).map((product) => (
               <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link
-              to="/shop"
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-red-500 text-white font-bold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all duration-300 group"
-            >
-              <span>View All Designs</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* New Design Collection */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 backdrop-blur-sm mb-4">
-              <Sparkles className="w-4 h-4 text-purple-400" />
-              <span className="text-purple-400 text-sm font-medium">New Collection</span>
-            </div>
-            <h2 className="text-5xl sm:text-6xl font-black text-white mb-4">
-              Limited <span className="trippy-text">Designs</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Exclusive drops featuring trippy art, cosmic vibes, and mind-bending aesthetics.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {products.slice(6, 10).map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
+            )) : (
+              <div className="col-span-full text-center text-gray-400 py-8">
+                More products coming soon...
+              </div>
+            )}
           </div>
 
           <div className="text-center">
