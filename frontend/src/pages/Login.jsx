@@ -48,12 +48,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+    <div className="min-h-screen pt-16 sm:pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-8 border border-cyan-500/20 shadow-2xl">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-black trippy-text mb-2">Login</h1>
-            <p className="text-gray-400">Welcome back to TrippyDrip</p>
+        <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 border border-cyan-500/20 shadow-2xl">
+          <div className="text-center mb-6 sm:mb-8">
+            <h1 className="text-3xl sm:text-4xl font-black trippy-text mb-2">Login</h1>
+            <p className="text-sm sm:text-base text-gray-400">Welcome back to TrippyDrip</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -85,7 +85,7 @@ const Login = () => {
 
             <Button
               type="submit"
-              className="w-full bg-gradient-to-r from-amber-400 via-pink-500 to-rose-500 text-black font-extrabold py-6 text-lg shadow-[0_0_30px_rgba(251,191,36,0.8)] hover:shadow-[0_0_40px_rgba(244,114,182,0.9)] hover:scale-105 transition-transform"
+              className="w-full bg-gradient-to-r from-cyan-500 to-magenta-500 hover:from-cyan-600 hover:to-magenta-600 text-white font-bold py-4 sm:py-6 text-base sm:text-lg"
               disabled={loading}
             >
               {loading ? (
@@ -123,7 +123,7 @@ const Login = () => {
                   setGoogleLoading(false);
                 }
               }}
-              className="w-full mt-4 bg-white hover:bg-gray-100 text-gray-900 font-medium py-6 text-lg flex items-center justify-center space-x-2"
+              className="w-full mt-4 bg-white hover:bg-gray-100 text-gray-900 font-medium py-4 sm:py-6 text-base sm:text-lg flex items-center justify-center space-x-2"
               disabled={googleLoading}
             >
               {googleLoading ? (

@@ -76,26 +76,26 @@ const Cart = () => {
     <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-5xl sm:text-6xl font-black text-white mb-4">
+        <div className="mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-2 sm:mb-4">
             Shopping <span className="trippy-text">Cart</span>
           </h1>
-          <p className="text-xl text-gray-400">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-400">
             {cart.length} item{cart.length !== 1 ? 's' : ''} in your cart
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Cart Items */}
           <div className="lg:col-span-2 space-y-4">
             {cart.map((item, index) => (
               <div
                 key={`${item.id}-${item.size}-${item.color}-${index}`}
-                className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800 hover:border-cyan-500/50 transition-all duration-300"
+                className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-zinc-800 hover:border-cyan-500/50 transition-all duration-300"
               >
-                <div className="flex flex-col sm:flex-row gap-6">
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
                   {/* Product Image */}
-                  <div className="w-full sm:w-32 h-32 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
+                  <div className="w-full sm:w-32 h-48 sm:h-32 rounded-xl overflow-hidden bg-zinc-800 flex-shrink-0">
                     <img
                       src={item.image}
                       alt={item.name}
@@ -109,17 +109,17 @@ const Cart = () => {
                   {/* Product Info */}
                   <div className="flex-grow">
                     <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-xl font-bold text-white mb-1">{item.name}</h3>
-                        <p className="text-sm text-gray-400">
+                      <div className="flex-1 pr-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-white mb-1">{item.name}</h3>
+                        <p className="text-xs sm:text-sm text-gray-400">
                           {item.size} • {item.color}
                         </p>
                       </div>
                       <button
                         onClick={() => handleRemove(item.id, item.size, item.color, item.name)}
-                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                        className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-all flex-shrink-0"
                       >
-                        <Trash2 className="w-5 h-5" />
+                        <Trash2 className="w-4 h-4 sm:w-5 sm:h-5" />
                       </button>
                     </div>
 
@@ -128,23 +128,23 @@ const Cart = () => {
                       <div className="flex items-center space-x-3">
                         <button
                           onClick={() => handleUpdateQuantity(item.id, item.size, item.color, item.quantity - 1)}
-                          className="w-8 h-8 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors font-bold flex items-center justify-center"
+                          className="w-10 h-10 sm:w-8 sm:h-8 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors font-bold flex items-center justify-center"
                         >
                           <Minus className="w-4 h-4" />
                         </button>
-                        <span className="text-lg font-bold text-white w-8 text-center">{item.quantity}</span>
+                        <span className="text-base sm:text-lg font-bold text-white w-8 text-center">{item.quantity}</span>
                         <button
                           onClick={() => handleUpdateQuantity(item.id, item.size, item.color, item.quantity + 1)}
-                          className="w-8 h-8 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors font-bold flex items-center justify-center"
+                          className="w-10 h-10 sm:w-8 sm:h-8 bg-zinc-800 text-white rounded-lg hover:bg-zinc-700 transition-colors font-bold flex items-center justify-center"
                         >
                           <Plus className="w-4 h-4" />
                         </button>
                       </div>
 
                       {/* Price */}
-                      <div className="text-right">
-                        <p className="text-2xl font-bold text-white">${(item.price * item.quantity).toFixed(2)}</p>
-                        <p className="text-sm text-gray-400">${item.price.toFixed(2)} each</p>
+                      <div className="text-left sm:text-right">
+                        <p className="text-xl sm:text-2xl font-bold text-white">${(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="text-xs sm:text-sm text-gray-400">${item.price.toFixed(2)} each</p>
                       </div>
                     </div>
                   </div>
@@ -162,7 +162,7 @@ const Cart = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-6 border border-zinc-800 sticky top-24">
+            <div className="bg-zinc-900/50 backdrop-blur-sm rounded-2xl p-4 sm:p-6 border border-zinc-800 lg:sticky lg:top-24">
               <h2 className="text-2xl font-black text-white mb-6">Order Summary</h2>
               
               <div className="space-y-4 mb-6">

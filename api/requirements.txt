@@ -32,3 +32,4 @@ typing_extensions>=4.15.0
 
 # Setuptools (for pkg_resources used by razorpay)
 setuptools>=80.0.0
+

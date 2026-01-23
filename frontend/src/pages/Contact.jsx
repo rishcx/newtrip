@@ -44,18 +44,18 @@ const Contact = () => {
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-magenta-500/10 rounded-full blur-3xl"></div>
         </div>
         
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-6xl sm:text-7xl font-black text-white mb-6">
+        <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-4 sm:mb-6">
             Get in <span className="trippy-text">Touch</span>
           </h1>
-          <p className="text-xl text-gray-300">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-300">
             Have questions? Want to collaborate? Just wanna vibe? Hit us up!
           </p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Contact Info */}
           <div className="space-y-6">
             <div className="p-6 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-cyan-500/50 transition-all">
@@ -95,8 +95,8 @@ const Contact = () => {
 
           {/* Contact Form */}
           <div className="lg:col-span-2">
-            <div className="p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800">
-              <h2 className="text-3xl font-black text-white mb-6">Send us a Message</h2>
+            <div className="p-6 sm:p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800">
+              <h2 className="text-2xl sm:text-3xl font-black text-white mb-4 sm:mb-6">Send us a Message</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
