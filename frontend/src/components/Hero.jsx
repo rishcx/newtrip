@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 const Hero = () => {
   return (
@@ -16,15 +16,10 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className="mb-6 inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 backdrop-blur-sm">
-          <Sparkles className="w-4 h-4 text-cyan-400" />
-          <span className="text-cyan-400 text-sm font-medium">New Collection Drop</span>
-        </div>
-
-        <h1 className="hero-title text-4xl sm:text-6xl lg:text-7xl xl:text-8xl trippy-text mt-2">
-          REALITY
-          <span className="block trippy-text mt-2">IS</span>
-          <span className="block text-3xl sm:text-5xl lg:text-6xl xl:text-7xl mt-2">Universe</span>
+        <h1 className="hero-title text-4xl sm:text-6xl lg:text-8xl mt-2">
+          <span className="glitch-text" data-text="A GLITCH">A GLITCH</span>
+          <span className="block glitch-text-in mt-2" data-text="in">in</span>
+          <span className="block glitch-text text-3xl sm:text-5xl lg:text-7xl mt-2" data-text="A MATRIX">A MATRIX</span>
         </h1>
 
         <p className="text-base sm:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">

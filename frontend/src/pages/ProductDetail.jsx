@@ -116,7 +116,10 @@ const ProductDetail = () => {
               <img
                 src={product.image || product.image_url}
                 alt={product.name}
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                style={{ willChange: 'transform', transform: 'translateZ(0)' }}
               />
             </div>
             <div className="absolute top-4 right-4 flex flex-col space-y-2">

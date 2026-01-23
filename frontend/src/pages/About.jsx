@@ -38,7 +38,10 @@ const About = () => {
               <img
                 src="https://images.pexels.com/photos/1566909/pexels-photo-1566909.jpeg"
                 alt="Psychedelic art"
+                loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
+                style={{ transform: 'translateZ(0)' }}
               />
             </div>
             <div className="absolute -bottom-6 -right-6 w-48 h-48 bg-gradient-to-br from-cyan-500 to-magenta-500 rounded-3xl blur-3xl opacity-30"></div>

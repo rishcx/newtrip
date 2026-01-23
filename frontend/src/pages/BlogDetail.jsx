@@ -66,7 +66,10 @@ const BlogDetail = () => {
         <img
           src={blog.image}
           alt={blog.title}
+          loading="eager"
+          decoding="async"
           className="w-full h-full object-cover"
+          style={{ transform: 'translateZ(0)' }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent"></div>
         
@@ -158,4 +161,5 @@ const BlogDetail = () => {
 };
 
 export default BlogDetail;
+
 
