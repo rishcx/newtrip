@@ -66,8 +66,15 @@ const Admin = () => {
           throw new Error(`Server error: ${response.status} ${response.statusText}`);
         }
       } else {
-        // If response is not JSON, read as text (but only once)
+        // If response is not JSON, it's likely HTML (frontend catch-all route)
         const text = await response.text();
+        if (text.includes('<!doctype html') || text.includes('<html')) {
+          throw new Error(
+            `Backend not configured. The API endpoint returned HTML instead of JSON. ` +
+            `Please set REACT_APP_BACKEND_URL environment variable to your backend URL ` +
+            `(e.g., https://your-backend.railway.app/api). Current URL: ${BACKEND_URL}`
+          );
+        }
         throw new Error(`Server error: ${response.status} ${response.statusText} - ${text.substring(0, 100)}`);
       }
 
