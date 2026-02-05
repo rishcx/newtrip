@@ -807,6 +807,9 @@ app.include_router(api_router)
 frontend_urls = [
     settings.frontend_url,
     "http://localhost:3000",
+    "http://localhost:3001",  # Alternative dev port
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
     "https://www.trippydrip.co.in",
     "https://trippydrip.co.in",
     os.getenv("VERCEL_URL", ""),  # Vercel deployment URL
@@ -819,8 +822,9 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=frontend_urls if frontend_urls else ["*"],  # Allow all in production if no URL set
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 
