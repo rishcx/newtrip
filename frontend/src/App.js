@@ -17,6 +17,7 @@ import TrippyTales from "./pages/TrippyTales";
 import TrippyTalesPage from "./pages/TrippyTalesPage";
 import BlogDetail from "./pages/BlogDetail";
 import { Toaster } from "./components/ui/toaster";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/admin" element={<Admin />} />
           </Routes>
+          <Footer />
           <Toaster />
         </BrowserRouter>
       </div>

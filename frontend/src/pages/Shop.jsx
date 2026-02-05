@@ -53,7 +53,7 @@ const Shop = () => {
   return (
     <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
       {/* Header */}
-      <div className="relative py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <div className="relative py-16 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-magenta-500/10 rounded-full blur-3xl"></div>
@@ -63,8 +63,11 @@ const Shop = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white mb-3 sm:mb-4">
             <span className="trippy-text">Shop</span> The Collection
           </h1>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto mb-4">
             Discover our full range of psychedelic streetwear. Each piece is a portal to another dimension.
+          </p>
+          <p className="text-sm text-gray-500">
+            Premium quality • Free shipping on orders $50+ • 30-day returns
           </p>
         </div>
       </div>
@@ -114,10 +117,15 @@ const Shop = () => {
 
       {/* Products Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
-        <div className="mb-6">
-          <p className="text-gray-400">
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-gray-400 text-sm sm:text-base">
             {loading ? 'Loading products...' : `Showing ${sortedProducts.length} product${sortedProducts.length !== 1 ? 's' : ''}`}
           </p>
+          {!loading && sortedProducts.length > 0 && (
+            <p className="text-gray-500 text-xs sm:text-sm hidden sm:block">
+              {selectedCategory !== 'all' && `Filtered by: ${selectedCategory}`}
+            </p>
+          )}
         </div>
 
         {loading ? (

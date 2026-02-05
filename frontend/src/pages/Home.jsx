@@ -200,6 +200,34 @@ const Home = () => {
         </div>
       </section>
 
+      {/* Trust & Benefits Section */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
+              <div className="text-3xl font-bold text-cyan-400 mb-2">✓</div>
+              <h3 className="text-white font-semibold mb-1">Premium Quality</h3>
+              <p className="text-gray-400 text-sm">High-grade materials & craftsmanship</p>
+            </div>
+            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
+              <div className="text-3xl font-bold text-magenta-400 mb-2">🚚</div>
+              <h3 className="text-white font-semibold mb-1">Free Shipping</h3>
+              <p className="text-gray-400 text-sm">On orders over $50 worldwide</p>
+            </div>
+            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
+              <div className="text-3xl font-bold text-yellow-400 mb-2">↩️</div>
+              <h3 className="text-white font-semibold mb-1">Easy Returns</h3>
+              <p className="text-gray-400 text-sm">30-day hassle-free return policy</p>
+            </div>
+            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
+              <div className="text-3xl font-bold text-green-400 mb-2">🔒</div>
+              <h3 className="text-white font-semibold mb-1">Secure Payment</h3>
+              <p className="text-gray-400 text-sm">SSL encrypted checkout</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
         <div className="absolute inset-0 opacity-30">
