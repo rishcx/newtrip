@@ -6,6 +6,8 @@ from pydantic import BaseModel
 from typing import List, Optional, Annotated
 import os
 import logging
+# Load setuptools before razorpay so pkg_resources is available (razorpay depends on it)
+import setuptools  # noqa: F401
 import razorpay
 import hmac
 import hashlib
