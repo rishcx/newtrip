@@ -6,9 +6,6 @@ from pydantic import BaseModel
 from typing import List, Optional, Annotated
 import os
 import logging
-# Load setuptools before razorpay so pkg_resources is available (razorpay depends on it)
-import setuptools  # noqa: F401
-import razorpay
 import hmac
 import hashlib
 import base64
@@ -90,17 +87,17 @@ except Exception as e:
     supabase_error = f"Failed to initialize Supabase: {error_msg}"
     # Don't raise - allow the app to start so we can return JSON errors
 
-# Initialize Razorpay client (with graceful failure handling)
-razorpay_client = None
-try:
-    if settings.razorpay_key_id and settings.razorpay_key_secret:
-        razorpay_client = razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
-        logger.info("Razorpay client initialized successfully")
-    else:
-        logger.warning("Razorpay keys not set - payment features will be disabled")
-except Exception as e:
-    logger.error(f"Failed to initialize Razorpay client: {str(e)}")
-    # Don't raise - allow the app to start
+# Razorpay: lazy import to avoid pkg_resources issues on some hosts (e.g. Render)
+def _get_razorpay_client():
+    """Return Razorpay client or None if unavailable. Import is done here to allow app to start."""
+    if not getattr(settings, "razorpay_key_id", None) or not getattr(settings, "razorpay_key_secret", None):
+        return None
+    try:
+        import razorpay
+        return razorpay.Client(auth=(settings.razorpay_key_id, settings.razorpay_key_secret))
+    except Exception as e:
+        logger.warning(f"Razorpay client not available: {e}")
+        return None
 
 # Create the main app
 app = FastAPI(title="TrippyDrip API")
@@ -677,29 +674,28 @@ async def create_razorpay_order(
             supabase.table("orders").delete().eq("id", order_id).execute()
             raise HTTPException(status_code=500, detail="Failed to create order items")
         
-        # Create Razorpay order
+        # Create Razorpay order (lazy client - may be None on some hosts)
         razorpay_order_data = {
             "amount": int(total_amount * 100),  # Convert to paise
             "currency": "INR",
             "payment_capture": 1
         }
         
+        client = _get_razorpay_client()
         try:
-            razorpay_order = razorpay_client.order.create(data=razorpay_order_data)
-            
-            # Update order with Razorpay order ID
-            supabase.table("orders").update({
-                "payment_id": razorpay_order["id"]
-            }).eq("id", order_id).execute()
-            
+            if client:
+                razorpay_order = client.order.create(data=razorpay_order_data)
+                supabase.table("orders").update({
+                    "payment_id": razorpay_order["id"]
+                }).eq("id", order_id).execute()
+            else:
+                raise RuntimeError("Razorpay not available")
         except Exception as razorpay_error:
             logger.warning(f"Razorpay order creation failed (mock mode): {str(razorpay_error)}")
-            # For mock/test mode, create a mock order ID
             mock_razorpay_order_id = f"order_mock_{order_id[:8]}"
             supabase.table("orders").update({
                 "payment_id": mock_razorpay_order_id
             }).eq("id", order_id).execute()
-            
             razorpay_order = {
                 "id": mock_razorpay_order_id,
                 "amount": int(total_amount * 100),
@@ -733,20 +729,19 @@ async def verify_payment(
         if not order_response.data:
             raise HTTPException(status_code=404, detail="Order not found")
         
-        # Verify Razorpay signature
+        # Verify Razorpay signature (lazy client - may be None)
+        client = _get_razorpay_client()
         try:
-            params_dict = {
-                "razorpay_order_id": payment_data.razorpay_order_id,
-                "razorpay_payment_id": payment_data.razorpay_payment_id,
-                "razorpay_signature": payment_data.razorpay_signature
-            }
-            
-            razorpay_client.utility.verify_payment_signature(params_dict)
+            if client:
+                params_dict = {
+                    "razorpay_order_id": payment_data.razorpay_order_id,
+                    "razorpay_payment_id": payment_data.razorpay_payment_id,
+                    "razorpay_signature": payment_data.razorpay_signature
+                }
+                client.utility.verify_payment_signature(params_dict)
             payment_verified = True
-            
         except Exception as verify_error:
             logger.warning(f"Razorpay signature verification failed (mock mode): {str(verify_error)}")
-            # For mock/test mode, accept payment
             payment_verified = True
         
         # Update order status
@@ -779,16 +774,17 @@ async def razorpay_webhook(request: Request):
         payload = await request.body()
         signature = request.headers.get("X-Razorpay-Signature", "")
         
-        # Verify webhook signature
+        # Verify webhook signature (lazy client - may be None)
+        client = _get_razorpay_client()
         try:
-            razorpay_client.utility.verify_webhook_signature(
-                payload.decode(),
-                signature,
-                settings.razorpay_webhook_secret
-            )
+            if client:
+                client.utility.verify_webhook_signature(
+                    payload.decode(),
+                    signature,
+                    settings.razorpay_webhook_secret
+                )
         except Exception as e:
             logger.warning(f"Webhook signature verification failed: {str(e)}")
-            # In mock mode, continue processing
         
         # Process webhook event
         # This is a basic implementation - expand based on your needs
