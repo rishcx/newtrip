@@ -804,6 +804,7 @@ app.include_router(api_router)
 
 # Configure CORS
 # Get frontend URL from environment or use production URL
+# These are the frontend origins that are allowed to make requests to this backend
 frontend_urls = [
     settings.frontend_url,
     "http://localhost:3000",
