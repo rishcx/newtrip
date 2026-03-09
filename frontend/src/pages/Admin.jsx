@@ -407,7 +407,7 @@ const Admin = () => {
 
   if (!authenticated) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 border border-cyan-500/20 shadow-2xl">
             <div className="text-center mb-6">
@@ -462,7 +462,7 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
+    <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white">

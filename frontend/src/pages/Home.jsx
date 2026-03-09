@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import ProductCard from '../components/ProductCard';
-import { ArrowRight, Zap, Palette, Sparkles, Loader2, BookOpen } from 'lucide-react';
+import MarqueeStrip from '../components/MarqueeStrip';
+import { ScrollReveal } from '../hooks/useScrollReveal';
+import { ArrowRight, Zap, Loader2, BookOpen, Ghost, Eye } from 'lucide-react';
 
-const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL ||
   (process.env.NODE_ENV === 'production' ? '/api' : 'http://localhost:8000/api');
 
 const Home = () => {
@@ -17,18 +19,13 @@ const Home = () => {
       try {
         setLoading(true);
         const response = await fetch(`${BACKEND_URL}/products`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch products');
-        }
+        if (!response.ok) throw new Error('Failed to fetch products');
         const data = await response.json();
-        // Transform API data to match component expectations
         const transformedProducts = data.map(product => ({
           ...product,
-          image: product.image_url || product.image // Support both field names
+          image: product.image_url || product.image
         }));
-        // Get first 3 products for featured section
         setFeaturedProducts(transformedProducts.slice(0, 3));
-        // Store all products for other sections
         setAllProducts(transformedProducts);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -38,217 +35,254 @@ const Home = () => {
         setLoading(false);
       }
     };
-
     fetchProducts();
   }, []);
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Section */}
+    <div className="min-h-screen relative z-[1]">
       <Hero />
 
-      {/* Featured Products */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        {/* Background effects */}
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-magenta-500/5 rounded-full blur-3xl"></div>
-        
+      {/* Marquee Strip */}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-magenta-500/5 to-yellow-500/5"></div>
+        <MarqueeStrip
+          className="border-y border-white/5 text-white/40 relative z-10"
+        />
+      </div>
+
+      {/* ===== BEST SELLERS ===== */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-12 sm:mb-16">
-            <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 backdrop-blur-sm mb-3 sm:mb-4">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400" />
-              <span className="text-cyan-400 text-xs sm:text-sm font-medium">Featured Collection</span>
+          <ScrollReveal>
+            <div className="text-center mb-12 sm:mb-16">
+              <h2
+                className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[0.9]"
+                style={{ fontFamily: "'Bungee', cursive" }}
+              >
+                BEST <span className="trippy-text inline-block">SELLERS</span>
+              </h2>
             </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-3 sm:mb-4">
-              Latest <span className="trippy-text">Drops</span>
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-400 max-w-2xl mx-auto px-4">
-              Fresh from the dimension. Limited edition pieces that define the vibe.
-            </p>
-          </div>
+          </ScrollReveal>
 
           {loading ? (
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
+            <div className="flex items-center justify-center py-20">
+              <Loader2 className="w-8 h-8 text-white animate-spin" />
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-x-8 sm:gap-y-14 mb-12">
+              {featuredProducts.map((product, i) => (
+                <ScrollReveal key={product.id} delay={i * 100}>
+                  <ProductCard product={product} />
+                </ScrollReveal>
               ))}
             </div>
           )}
 
-          <div className="text-center">
-            <Link
-              to="/shop"
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white font-bold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(6,182,212,0.5)] transition-all duration-300 group"
-            >
-              <span>View All Products</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-          </div>
+          <ScrollReveal>
+            <div className="text-center">
+              <Link
+                to="/shop"
+                className="group inline-flex items-center space-x-3 px-8 py-3.5 border border-white/20 text-white font-bold text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300"
+                style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
+              >
+                <span>View All</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </div>
+          </ScrollReveal>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-cyan-500/50 transition-all duration-300 hover:scale-105">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-cyan-500/10 flex items-center justify-center">
-                <Zap className="w-8 h-8 text-cyan-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Instant Vibes</h3>
-              <p className="text-gray-400">
-                Transform your wardrobe with pieces that radiate pure energy and creativity.
-              </p>
-            </div>
+      {/* Section Divider */}
+      <div className="section-divider"></div>
 
-            <div className="text-center p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-magenta-500/50 transition-all duration-300 hover:scale-105">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-magenta-500/10 flex items-center justify-center">
-                <Palette className="w-8 h-8 text-magenta-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Psychedelic Art</h3>
-              <p className="text-gray-400">
-                Each piece is a wearable canvas featuring mind-bending designs and liquid swirls.
-              </p>
-            </div>
-
-            <div className="text-center p-8 rounded-2xl bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-yellow-500/50 transition-all duration-300 hover:scale-105">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-yellow-500/10 flex items-center justify-center">
-                <Sparkles className="w-8 h-8 text-yellow-400" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-3">Limited Edition</h3>
-              <p className="text-gray-400">
-                Exclusive drops that sell out fast. Be part of the trippy drip movement.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* New Design Collection */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-red-500/5 rounded-full blur-3xl"></div>
-        </div>
-        
+      {/* ===== VIBES SECTION ===== */}
+      <section className="py-16 sm:py-20 px-4 sm:px-6 lg:px-8 relative">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/30 backdrop-blur-sm mb-4">
-              <Sparkles className="w-4 h-4 text-purple-400" />
-              <span className="text-purple-400 text-sm font-medium">New Collection</span>
+          <ScrollReveal>
+            <div className="text-center mb-12">
+              <h3 className="text-xs font-black tracking-[0.3em] uppercase text-magenta-400 mb-3" style={{ fontFamily: "'Rajdhani', sans-serif" }}>Why TrippyDrip?</h3>
+              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white" style={{ fontFamily: "'Bungee', cursive" }}>
+                THE <span className="trippy-text">VIBES</span>
+              </h2>
             </div>
-            <h2 className="text-5xl sm:text-6xl font-black text-white mb-4">
-              Limited <span className="trippy-text">Designs</span>
-            </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-              Exclusive drops featuring trippy art, cosmic vibes, and mind-bending aesthetics.
-            </p>
-          </div>
+          </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {allProducts.length > 6 ? allProducts.slice(6, 10).map((product) => (
-              <ProductCard key={product.id} product={product} />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { icon: Zap, color: 'cyan', gradient: 'from-cyan-500/20 to-cyan-500/5', title: 'INSTANT ENERGY', desc: 'Pieces that radiate pure energy and make heads turn every single time.' },
+              { icon: Eye, color: 'magenta', gradient: 'from-magenta-500/20 to-magenta-500/5', title: 'PSYCHEDELIC ART', desc: 'Wearable canvas featuring mind-bending designs and liquid swirl patterns.' },
+              { icon: Ghost, color: 'yellow', gradient: 'from-yellow-500/20 to-yellow-500/5', title: 'LIMITED RUNS', desc: 'Exclusive drops that sell out fast. Once gone, they\'re gone forever.' },
+            ].map((feature, i) => (
+              <ScrollReveal key={feature.title} delay={i * 150}>
+                <div className={`glow-card group relative p-6 sm:p-8 rounded-2xl bg-gradient-to-b ${feature.gradient} backdrop-blur-sm border border-white/5 hover:border-${feature.color}-500/30 transition-all duration-500 text-center overflow-hidden`}>
+                  {/* Shimmer overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.02] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+
+                  <div className={`w-14 h-14 mx-auto mb-5 rounded-xl bg-${feature.color}-500/10 border border-${feature.color}-500/20 flex items-center justify-center group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                    <feature.icon className={`w-7 h-7 text-${feature.color}-400`} />
+                  </div>
+
+                  <h3 className="text-base sm:text-lg font-black text-white mb-2 tracking-wider" style={{ fontFamily: "'Righteous', cursive" }}>
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-500 text-xs sm:text-sm leading-relaxed tracking-wide" style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 500 }}>
+                    {feature.desc}
+                  </p>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Reverse Marquee */}
+      <MarqueeStrip
+        direction="right"
+        messages={['STAY TRIPPY', 'DROP CULTURE', 'NEON GLOW', 'MIND EXPANSION', 'COSMIC DRIP', 'BREAK THE MOLD', 'ACID DREAMS', 'PURE ENERGY']}
+        className="border-y border-white/5 text-white/30"
+        speed={35}
+      />
+
+      {/* ===== NEW COLLECTION ===== */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <ScrollReveal>
+            <div className="text-center mb-12 sm:mb-16">
+              <h2
+                className="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-[0.9]"
+                style={{ fontFamily: "'Bungee', cursive" }}
+              >
+                NEW <span className="trippy-text inline-block">COLLECTION</span>
+              </h2>
+            </div>
+          </ScrollReveal>
+
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-12 sm:gap-x-8 sm:gap-y-14 mb-12">
+            {allProducts.length > 6 ? allProducts.slice(6, 10).map((product, i) => (
+              <ScrollReveal key={product.id} delay={i * 100}>
+                <ProductCard product={product} />
+              </ScrollReveal>
+            )) : allProducts.length > 3 ? allProducts.slice(0, 4).map((product, i) => (
+              <ScrollReveal key={product.id} delay={i * 100}>
+                <ProductCard product={product} />
+              </ScrollReveal>
             )) : (
-              <div className="col-span-full text-center text-gray-400 py-8">
-                More products coming soon...
+              <div className="col-span-full text-center text-gray-500 py-8">
+                <Ghost className="w-12 h-12 mx-auto mb-3 text-gray-700" />
+                <p className="font-medium tracking-wider uppercase text-sm" style={{ fontFamily: "'Rajdhani', sans-serif" }}>More dropping soon...</p>
               </div>
             )}
           </div>
 
-          <div className="text-center">
+          <ScrollReveal>
+            <div className="text-center">
+              <Link
+                to="/shop"
+                className="group inline-flex items-center space-x-3 px-8 py-3.5 border border-white/20 text-white font-bold text-xs tracking-[0.2em] uppercase hover:bg-white hover:text-black transition-all duration-300"
+                style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
+              >
+                <span>View All</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
+            </div>
+          </ScrollReveal>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="section-divider"></div>
+
+      {/* ===== TRIPPY TALES ===== */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-500/[0.03] rounded-full blur-[120px]"></div>
+          <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-pink-500/[0.03] rounded-full blur-[120px]"></div>
+        </div>
+
+        <ScrollReveal>
+          <div className="max-w-4xl mx-auto text-center relative z-10">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-pink-500/10 border border-amber-500/20 backdrop-blur-sm mb-6">
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              <span className="text-xs sm:text-sm font-black tracking-[0.2em] uppercase text-amber-400" style={{ fontFamily: "'Rajdhani', sans-serif" }}>
+                Stories & Insights
+              </span>
+            </div>
+
+            <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white mb-4" style={{ fontFamily: "'Bungee', cursive" }}>
+              <span className="trippy-text">TRIPPY TALES</span>
+            </h2>
+
+            <p className="text-sm sm:text-base lg:text-lg text-gray-400 mb-10 max-w-2xl mx-auto tracking-wide" style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 500 }}>
+              Dive into stories, insights, and cosmic wisdom from the world of psychedelic streetwear. Where fashion meets consciousness.
+            </p>
+
             <Link
-              to="/shop"
-              className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-red-500 text-white font-bold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] transition-all duration-300 group"
+              to="/trippy-tales"
+              className="group inline-flex items-center space-x-3 px-8 py-4 bg-gradient-to-r from-amber-500 via-pink-500 to-rose-500 text-white font-black text-base sm:text-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(251,191,36,0.4)] transition-all duration-300 tracking-wider uppercase"
+              style={{ fontFamily: "'Righteous', cursive" }}
             >
-              <span>View All Designs</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <span>Read the Tales</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
             </Link>
           </div>
-        </div>
+        </ScrollReveal>
       </section>
 
-      {/* Trippy Tales Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute inset-0">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-pink-500/5 rounded-full blur-3xl"></div>
-        </div>
-        
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-amber-500/10 border border-amber-500/30 backdrop-blur-sm mb-6">
-            <BookOpen className="w-5 h-5 text-amber-400" />
-            <span className="text-amber-400 text-sm font-medium">Stories & Insights</span>
-          </div>
-          <h2 className="text-5xl sm:text-6xl font-black text-white mb-4">
-            <span className="trippy-text">Trippy Tales</span>
-          </h2>
-          <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            Dive into stories, insights, and cosmic wisdom from the world of psychedelic streetwear. 
-            Where fashion meets consciousness.
-          </p>
-          <Link
-            to="/trippy-tales"
-            className="inline-flex items-center space-x-2 px-8 py-4 bg-gradient-to-r from-amber-500 via-pink-500 to-rose-500 text-white font-bold text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(251,191,36,0.5)] transition-all duration-300 group"
-          >
-            <span>Read the Tales</span>
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
-      </section>
-
-      {/* Trust & Benefits Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
-              <div className="text-3xl font-bold text-cyan-400 mb-2">✓</div>
-              <h3 className="text-white font-semibold mb-1">Premium Quality</h3>
-              <p className="text-gray-400 text-sm">High-grade materials & craftsmanship</p>
-            </div>
-            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
-              <div className="text-3xl font-bold text-magenta-400 mb-2">🚚</div>
-              <h3 className="text-white font-semibold mb-1">Free Shipping</h3>
-              <p className="text-gray-400 text-sm">On orders over $50 worldwide</p>
-            </div>
-            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
-              <div className="text-3xl font-bold text-yellow-400 mb-2">↩️</div>
-              <h3 className="text-white font-semibold mb-1">Easy Returns</h3>
-              <p className="text-gray-400 text-sm">30-day hassle-free return policy</p>
-            </div>
-            <div className="text-center p-6 bg-zinc-900/50 rounded-xl border border-zinc-800">
-              <div className="text-3xl font-bold text-green-400 mb-2">🔒</div>
-              <h3 className="text-white font-semibold mb-1">Secure Payment</h3>
-              <p className="text-gray-400 text-sm">SSL encrypted checkout</p>
-            </div>
+      {/* ===== TRUST BADGES ===== */}
+      <section className="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 relative">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
+            {[
+              { symbol: '◆', color: 'cyan', title: 'Premium Quality', desc: 'High-grade materials' },
+              { symbol: '⚡', color: 'magenta', title: 'Free Shipping', desc: 'Orders over $50' },
+              { symbol: '↻', color: 'yellow', title: 'Easy Returns', desc: '30-day policy' },
+              { symbol: '◈', color: 'green', title: 'Secure Pay', desc: 'SSL encrypted' },
+            ].map((item, i) => (
+              <ScrollReveal key={item.title} delay={i * 80}>
+                <div className="text-center p-4 sm:p-5 bg-white/[0.02] backdrop-blur-sm rounded-xl border border-white/5 hover:border-white/10 transition-all duration-300">
+                  <div className={`text-xl sm:text-2xl text-${item.color}-400 mb-2`}>{item.symbol}</div>
+                  <h3 className="text-white text-xs sm:text-sm font-black tracking-wider uppercase mb-0.5" style={{ fontFamily: "'Righteous', cursive" }}>{item.title}</h3>
+                  <p className="text-gray-600 text-[10px] sm:text-xs tracking-wide" style={{ fontFamily: "'Rajdhani', sans-serif" }}>{item.desc}</p>
+                </div>
+              </ScrollReveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-black/60 backdrop-blur-sm relative overflow-hidden">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-cyan-500/20 via-magenta-500/20 to-yellow-500/20"></div>
+      {/* ===== CTA ===== */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/20 via-magenta-500/20 to-yellow-500/20"></div>
         </div>
-        
-        <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-4 sm:mb-6">
-            Ready to <span className="trippy-text">Elevate</span> Your Style?
-          </h2>
-          <p className="text-base sm:text-lg lg:text-xl text-gray-300 mb-6 sm:mb-8">
-            Join thousands of vibers rocking TrippyDrip worldwide.
-          </p>
-          <Link
-            to="/shop"
-            className="inline-flex items-center space-x-2 px-6 sm:px-8 py-3 sm:py-4 bg-white text-black font-bold text-base sm:text-lg rounded-full hover:scale-105 hover:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all duration-300 group"
-          >
-            <span>Start Shopping</span>
-            <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        </div>
+
+        <ScrollReveal>
+          <div className="max-w-4xl mx-auto text-center relative z-10 px-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-[0.95]" style={{ fontFamily: "'Bungee', cursive" }}>
+              READY TO{' '}<span className="trippy-text inline-block">ELEVATE</span>{' '}YOUR STYLE?
+            </h2>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-400 mb-8 tracking-wide" style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 500 }}>
+              Join thousands of vibers rocking TrippyDrip worldwide.
+            </p>
+            <Link
+              to="/shop"
+              className="group inline-flex items-center space-x-3 px-8 py-4 bg-white text-black font-black text-base sm:text-lg rounded-full hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)] transition-all duration-300 tracking-wider uppercase"
+              style={{ fontFamily: "'Righteous', cursive" }}
+            >
+              <span>Start Shopping</span>
+              <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform duration-300" />
+            </Link>
+          </div>
+        </ScrollReveal>
       </section>
     </div>
   );

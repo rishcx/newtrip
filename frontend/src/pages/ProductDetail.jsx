@@ -75,7 +75,7 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-12 h-12 text-cyan-400 animate-spin mx-auto mb-4" />
           <p className="text-white text-xl">Loading product...</p>
@@ -86,7 +86,7 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center">
           <p className="text-white text-2xl mb-4">Product not found</p>
           <Link to="/shop" className="text-cyan-400 hover:text-cyan-300">
@@ -98,7 +98,7 @@ const ProductDetail = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
+    <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Breadcrumb */}
         <div className="mb-6 sm:mb-8 flex items-center space-x-2 text-xs sm:text-sm flex-wrap">

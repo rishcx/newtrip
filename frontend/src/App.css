@@ -1,4 +1,9 @@
-/* Trippy Text Effect */
+/* ============================================
+   TRIPPYDRIP - CORE STYLES
+   Psychedelic streetwear vibes
+   ============================================ */
+
+/* --- Trippy Text Effect --- */
 .trippy-text {
     font-family: 'Bungee', 'Righteous', 'Fredoka One', cursive, sans-serif;
     background: linear-gradient(
@@ -16,13 +21,11 @@
     animation: trippy-gradient 3s linear infinite;
     font-weight: 900;
     letter-spacing: 0.05em;
-    text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
     filter: drop-shadow(0 0 10px rgba(236, 72, 153, 0.5));
 }
 
-/* Mobile-friendly sizing and layout guardrails */
+/* --- Root & Body --- */
 :root {
-    /* Scale the base font size between 14px and 16px depending on viewport width */
     font-size: clamp(14px, 3.5vw, 16px);
 }
 
@@ -30,127 +33,159 @@ body {
     line-height: 1.6;
 }
 
-.App {
-    /* Avoid unintended horizontal scrolling on small screens */
-    overflow-x: hidden;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-    will-change: scroll-position;
-}
-
-/* Performance optimizations for smooth scrolling */
-img {
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
-
-/* Optimize animations for GPU acceleration */
-.floating-orb,
-.floating-orb-delayed {
-    will-change: transform;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
-
-.hero-title {
-    will-change: opacity, transform;
-}
-
-.glitch-text,
-.glitch-text-in {
-    will-change: transform;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
-}
-
-@keyframes trippy-gradient {
-    0% {
-        background-position: 0% center;
-    }
-    100% {
-        background-position: 200% center;
-    }
-}
-
-/* Floating Orb Animations */
-.floating-orb {
-    background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
-    animation: float 6s ease-in-out infinite;
-}
-
-.floating-orb-delayed {
-    background: radial-gradient(circle, #ec4899 0%, transparent 70%);
-    animation: float 8s ease-in-out infinite;
-    animation-delay: -2s;
-}
-
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) scale(1);
-    }
-    33% {
-        transform: translate(30px, -30px) scale(1.1);
-    }
-    66% {
-        transform: translate(-20px, 20px) scale(0.9);
-    }
-}
-
-/* Hero Title Animation */
-.hero-title {
-    animation: fadeInUp 1s ease-out;
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Smooth Scrolling */
 html {
     scroll-behavior: smooth;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-    width: 12px;
+.App {
+    overflow-x: hidden;
 }
 
-::-webkit-scrollbar-track {
-    background: #0a0a0a;
+/* --- Animated Color Overlay (subtle, no dimming) --- */
+.App::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    background:
+        radial-gradient(ellipse 80% 60% at 20% 40%, rgba(6, 182, 212, 0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 80% 20%, rgba(236, 72, 153, 0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 70% 50% at 50% 90%, rgba(251, 191, 36, 0.04) 0%, transparent 60%);
+    animation: bg-shift 25s ease-in-out infinite alternate;
 }
 
-::-webkit-scrollbar-thumb {
-    background: linear-gradient(180deg, #06b6d4, #ec4899);
-    border-radius: 6px;
+@keyframes bg-shift {
+    0% {
+        transform: scale(1) translate(0, 0);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1.1) translate(-2%, 3%);
+        filter: hue-rotate(30deg);
+    }
+    100% {
+        transform: scale(1) translate(2%, -2%);
+        filter: hue-rotate(-20deg);
+    }
 }
 
-::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, #22c55e, #fbbf24);
+@keyframes bg-shift-2 {
+    0% {
+        transform: scale(1.1) translate(2%, -2%);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        transform: scale(1) translate(-3%, 2%);
+        filter: hue-rotate(-25deg);
+    }
+    100% {
+        transform: scale(1.05) translate(1%, 1%);
+        filter: hue-rotate(15deg);
+    }
 }
 
-/* Selection */
-::selection {
-    background: #06b6d4;
-    color: white;
+/* --- Noise Texture Overlay --- */
+.App::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 256px 256px;
 }
 
-::-moz-selection {
-    background: #06b6d4;
-    color: white;
+/* --- Gradient Keyframe --- */
+@keyframes trippy-gradient {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
 }
 
-/* Glitch Text Effect */
+/* --- Hero Orbs --- */
+.hero-orb-1 {
+    background: radial-gradient(circle, #06b6d4, transparent);
+    animation: orb-drift-1 12s ease-in-out infinite;
+}
+.hero-orb-2 {
+    background: radial-gradient(circle, #ec4899, transparent);
+    animation: orb-drift-2 15s ease-in-out infinite;
+}
+.hero-orb-3 {
+    background: radial-gradient(circle, #fbbf24, transparent);
+    animation: orb-drift-3 18s ease-in-out infinite;
+}
+
+@keyframes orb-drift-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(60px, -40px) scale(1.15); }
+    50% { transform: translate(-30px, 50px) scale(0.9); }
+    75% { transform: translate(40px, 20px) scale(1.05); }
+}
+@keyframes orb-drift-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-50px, 30px) scale(1.1); }
+    50% { transform: translate(40px, -60px) scale(0.95); }
+    75% { transform: translate(-20px, -30px) scale(1.08); }
+}
+@keyframes orb-drift-3 {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    33% { transform: translate(calc(-50% + 30px), calc(-50% + 40px)) scale(1.2); }
+    66% { transform: translate(calc(-50% - 40px), calc(-50% - 30px)) scale(0.85); }
+}
+
+/* --- Hero Animations --- */
+.hero-title {
+    animation: fadeInUp 1s ease-out;
+}
+.hero-badge {
+    animation: fadeInDown 0.8s ease-out;
+}
+.hero-subtitle {
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+.hero-buttons {
+    animation: fadeInUp 1s ease-out 0.5s both;
+}
+.hero-stats {
+    animation: fadeInUp 1s ease-out 0.7s both;
+}
+.stat-item {
+    animation: statPop 0.6s ease-out 1s both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes statPop {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* --- Scroll Indicator Dot --- */
+.scroll-dot {
+    animation: scrollBounce 1.5s ease-in-out infinite;
+}
+@keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    50% { transform: translateY(8px); opacity: 0.3; }
+}
+
+/* --- Glitch Text Effect --- */
 .glitch-text {
     font-family: 'Orbitron', 'Rajdhani', monospace;
     font-weight: 900;
@@ -159,7 +194,7 @@ html {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     animation: glitch 2s infinite;
-    text-shadow: 
+    text-shadow:
         0.05em 0 0 #00ff00,
         -0.05em -0.025em 0 #ff0000,
         0.025em 0.05em 0 #0000ff;
@@ -198,7 +233,7 @@ html {
     letter-spacing: 0.2em;
     font-size: 0.6em;
     animation: glitch-small 3s infinite;
-    text-shadow: 
+    text-shadow:
         0.03em 0 0 #ff00ff,
         -0.03em -0.015em 0 #00ffff,
         0.015em 0.03em 0 #00ff00;
@@ -229,311 +264,163 @@ html {
 }
 
 @keyframes glitch {
-    0%, 100% {
-        text-shadow: 
-            0.05em 0 0 #00ff00,
-            -0.05em -0.025em 0 #ff0000,
-            0.025em 0.05em 0 #0000ff;
-    }
-    15% {
-        text-shadow: 
-            0.05em 0 0 #00ff00,
-            -0.05em -0.025em 0 #ff0000,
-            0.025em 0.05em 0 #0000ff;
-    }
-    16% {
-        text-shadow: 
-            -0.05em -0.025em 0 #ff0000,
-            0.025em 0.025em 0 #00ff00,
-            0.05em -0.05em 0 #0000ff;
-    }
-    49% {
-        text-shadow: 
-            -0.05em -0.025em 0 #ff0000,
-            0.025em 0.025em 0 #00ff00,
-            0.05em -0.05em 0 #0000ff;
-    }
-    50% {
-        text-shadow: 
-            0.025em 0.05em 0 #0000ff,
-            0.05em 0 0 #00ff00,
-            -0.05em -0.025em 0 #ff0000;
-    }
-    99% {
-        text-shadow: 
-            0.025em 0.05em 0 #0000ff,
-            0.05em 0 0 #00ff00,
-            -0.05em -0.025em 0 #ff0000;
-    }
+    0%, 100% { text-shadow: 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #ff0000, 0.025em 0.05em 0 #0000ff; }
+    16% { text-shadow: -0.05em -0.025em 0 #ff0000, 0.025em 0.025em 0 #00ff00, 0.05em -0.05em 0 #0000ff; }
+    50% { text-shadow: 0.025em 0.05em 0 #0000ff, 0.05em 0 0 #00ff00, -0.05em -0.025em 0 #ff0000; }
 }
 
 @keyframes glitch-small {
-    0%, 100% {
-        text-shadow: 
-            0.03em 0 0 #ff00ff,
-            -0.03em -0.015em 0 #00ffff,
-            0.015em 0.03em 0 #00ff00;
-    }
-    20% {
-        text-shadow: 
-            -0.03em -0.015em 0 #00ffff,
-            0.015em 0.015em 0 #ff00ff,
-            0.03em -0.03em 0 #00ff00;
-    }
-    40% {
-        text-shadow: 
-            0.015em 0.03em 0 #00ff00,
-            0.03em 0 0 #ff00ff,
-            -0.03em -0.015em 0 #00ffff;
-    }
-    60% {
-        text-shadow: 
-            -0.03em -0.015em 0 #00ffff,
-            0.015em 0.015em 0 #ff00ff,
-            0.03em -0.03em 0 #00ff00;
-    }
-    80% {
-        text-shadow: 
-            0.015em 0.03em 0 #00ff00,
-            0.03em 0 0 #ff00ff,
-            -0.03em -0.015em 0 #00ffff;
-    }
+    0%, 100% { text-shadow: 0.03em 0 0 #ff00ff, -0.03em -0.015em 0 #00ffff, 0.015em 0.03em 0 #00ff00; }
+    20% { text-shadow: -0.03em -0.015em 0 #00ffff, 0.015em 0.015em 0 #ff00ff, 0.03em -0.03em 0 #00ff00; }
+    60% { text-shadow: -0.03em -0.015em 0 #00ffff, 0.015em 0.015em 0 #ff00ff, 0.03em -0.03em 0 #00ff00; }
 }
 
 @keyframes glitch-anim {
-    0% {
-        clip: rect(31px, 9999px, 94px, 0);
-        transform: skew(0.5deg);
-    }
-    5% {
-        clip: rect(54px, 9999px, 12px, 0);
-        transform: skew(0.8deg);
-    }
-    10% {
-        clip: rect(12px, 9999px, 78px, 0);
-        transform: skew(0.3deg);
-    }
-    15% {
-        clip: rect(88px, 9999px, 45px, 0);
-        transform: skew(0.6deg);
-    }
-    20% {
-        clip: rect(23px, 9999px, 67px, 0);
-        transform: skew(0.4deg);
-    }
-    25% {
-        clip: rect(67px, 9999px, 34px, 0);
-        transform: skew(0.7deg);
-    }
-    30% {
-        clip: rect(45px, 9999px, 89px, 0);
-        transform: skew(0.2deg);
-    }
-    35% {
-        clip: rect(78px, 9999px, 23px, 0);
-        transform: skew(0.9deg);
-    }
-    40% {
-        clip: rect(34px, 9999px, 56px, 0);
-        transform: skew(0.5deg);
-    }
-    45% {
-        clip: rect(89px, 9999px, 12px, 0);
-        transform: skew(0.3deg);
-    }
-    50% {
-        clip: rect(56px, 9999px, 78px, 0);
-        transform: skew(0.6deg);
-    }
-    55% {
-        clip: rect(12px, 9999px, 45px, 0);
-        transform: skew(0.8deg);
-    }
-    60% {
-        clip: rect(67px, 9999px, 23px, 0);
-        transform: skew(0.4deg);
-    }
-    65% {
-        clip: rect(45px, 9999px, 89px, 0);
-        transform: skew(0.7deg);
-    }
-    70% {
-        clip: rect(23px, 9999px, 67px, 0);
-        transform: skew(0.2deg);
-    }
-    75% {
-        clip: rect(78px, 9999px, 34px, 0);
-        transform: skew(0.9deg);
-    }
-    80% {
-        clip: rect(34px, 9999px, 56px, 0);
-        transform: skew(0.5deg);
-    }
-    85% {
-        clip: rect(89px, 9999px, 12px, 0);
-        transform: skew(0.3deg);
-    }
-    90% {
-        clip: rect(56px, 9999px, 78px, 0);
-        transform: skew(0.6deg);
-    }
-    95% {
-        clip: rect(12px, 9999px, 45px, 0);
-        transform: skew(0.8deg);
-    }
-    100% {
-        clip: rect(78px, 9999px, 34px, 0);
-        transform: skew(0.4deg);
-    }
+    0% { clip: rect(31px, 9999px, 94px, 0); transform: skew(0.5deg); }
+    10% { clip: rect(12px, 9999px, 78px, 0); transform: skew(0.3deg); }
+    20% { clip: rect(23px, 9999px, 67px, 0); transform: skew(0.4deg); }
+    30% { clip: rect(45px, 9999px, 89px, 0); transform: skew(0.2deg); }
+    40% { clip: rect(34px, 9999px, 56px, 0); transform: skew(0.5deg); }
+    50% { clip: rect(56px, 9999px, 78px, 0); transform: skew(0.6deg); }
+    60% { clip: rect(67px, 9999px, 23px, 0); transform: skew(0.4deg); }
+    70% { clip: rect(23px, 9999px, 67px, 0); transform: skew(0.2deg); }
+    80% { clip: rect(34px, 9999px, 56px, 0); transform: skew(0.5deg); }
+    90% { clip: rect(56px, 9999px, 78px, 0); transform: skew(0.6deg); }
+    100% { clip: rect(78px, 9999px, 34px, 0); transform: skew(0.4deg); }
 }
 
 @keyframes glitch-anim2 {
-    0% {
-        clip: rect(65px, 9999px, 100px, 0);
-        transform: skew(0.3deg);
-    }
-    5% {
-        clip: rect(12px, 9999px, 45px, 0);
-        transform: skew(0.7deg);
-    }
-    10% {
-        clip: rect(89px, 9999px, 23px, 0);
-        transform: skew(0.2deg);
-    }
-    15% {
-        clip: rect(34px, 9999px, 78px, 0);
-        transform: skew(0.9deg);
-    }
-    20% {
-        clip: rect(67px, 9999px, 12px, 0);
-        transform: skew(0.4deg);
-    }
-    25% {
-        clip: rect(45px, 9999px, 89px, 0);
-        transform: skew(0.6deg);
-    }
-    30% {
-        clip: rect(23px, 9999px, 56px, 0);
-        transform: skew(0.8deg);
-    }
-    35% {
-        clip: rect(78px, 9999px, 34px, 0);
-        transform: skew(0.1deg);
-    }
-    40% {
-        clip: rect(56px, 9999px, 67px, 0);
-        transform: skew(0.5deg);
-    }
-    45% {
-        clip: rect(12px, 9999px, 45px, 0);
-        transform: skew(0.3deg);
-    }
-    50% {
-        clip: rect(89px, 9999px, 23px, 0);
-        transform: skew(0.7deg);
-    }
-    55% {
-        clip: rect(34px, 9999px, 78px, 0);
-        transform: skew(0.2deg);
-    }
-    60% {
-        clip: rect(67px, 9999px, 12px, 0);
-        transform: skew(0.9deg);
-    }
-    65% {
-        clip: rect(45px, 9999px, 89px, 0);
-        transform: skew(0.4deg);
-    }
-    70% {
-        clip: rect(23px, 9999px, 56px, 0);
-        transform: skew(0.6deg);
-    }
-    75% {
-        clip: rect(78px, 9999px, 34px, 0);
-        transform: skew(0.8deg);
-    }
-    80% {
-        clip: rect(56px, 9999px, 67px, 0);
-        transform: skew(0.1deg);
-    }
-    85% {
-        clip: rect(12px, 9999px, 45px, 0);
-        transform: skew(0.5deg);
-    }
-    90% {
-        clip: rect(89px, 9999px, 23px, 0);
-        transform: skew(0.3deg);
-    }
-    95% {
-        clip: rect(34px, 9999px, 78px, 0);
-        transform: skew(0.7deg);
-    }
-    100% {
-        clip: rect(67px, 9999px, 12px, 0);
-        transform: skew(0.2deg);
-    }
+    0% { clip: rect(65px, 9999px, 100px, 0); transform: skew(0.3deg); }
+    20% { clip: rect(67px, 9999px, 12px, 0); transform: skew(0.4deg); }
+    40% { clip: rect(56px, 9999px, 67px, 0); transform: skew(0.5deg); }
+    60% { clip: rect(67px, 9999px, 12px, 0); transform: skew(0.9deg); }
+    80% { clip: rect(56px, 9999px, 67px, 0); transform: skew(0.1deg); }
+    100% { clip: rect(67px, 9999px, 12px, 0); transform: skew(0.2deg); }
 }
 
 @keyframes glitch-anim-small {
-    0% {
-        clip: rect(15px, 9999px, 30px, 0);
-        transform: skew(0.2deg);
-    }
-    25% {
-        clip: rect(8px, 9999px, 20px, 0);
-        transform: skew(0.4deg);
-    }
-    50% {
-        clip: rect(22px, 9999px, 12px, 0);
-        transform: skew(0.3deg);
-    }
-    75% {
-        clip: rect(5px, 9999px, 28px, 0);
-        transform: skew(0.5deg);
-    }
-    100% {
-        clip: rect(18px, 9999px, 15px, 0);
-        transform: skew(0.2deg);
-    }
+    0% { clip: rect(15px, 9999px, 30px, 0); transform: skew(0.2deg); }
+    50% { clip: rect(22px, 9999px, 12px, 0); transform: skew(0.3deg); }
+    100% { clip: rect(18px, 9999px, 15px, 0); transform: skew(0.2deg); }
 }
 
 @keyframes glitch-anim-small2 {
-    0% {
-        clip: rect(20px, 9999px, 10px, 0);
-        transform: skew(0.3deg);
-    }
-    33% {
-        clip: rect(12px, 9999px, 25px, 0);
-        transform: skew(0.5deg);
-    }
-    66% {
-        clip: rect(8px, 9999px, 18px, 0);
-        transform: skew(0.2deg);
-    }
-    100% {
-        clip: rect(25px, 9999px, 5px, 0);
-        transform: skew(0.4deg);
-    }
+    0% { clip: rect(20px, 9999px, 10px, 0); transform: skew(0.3deg); }
+    50% { clip: rect(8px, 9999px, 18px, 0); transform: skew(0.2deg); }
+    100% { clip: rect(25px, 9999px, 5px, 0); transform: skew(0.4deg); }
 }
 
-/* Trippy Mobile Menu Styles */
+/* --- Marquee --- */
+.marquee-track {
+    animation: marquee-scroll var(--speed) linear infinite;
+    animation-direction: var(--direction, normal);
+}
+.marquee-content {
+    animation: inherit;
+    animation-name: none;
+}
+
+@keyframes marquee-scroll {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+/* --- Floating Orbs (Generic) --- */
+.floating-orb {
+    background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+}
+.floating-orb-delayed {
+    background: radial-gradient(circle, #ec4899 0%, transparent 70%);
+    animation: float 8s ease-in-out infinite;
+    animation-delay: -2s;
+    will-change: transform;
+}
+
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -30px) scale(1.1); }
+    66% { transform: translate(-20px, 20px) scale(0.9); }
+}
+
+/* --- Section Divider --- */
+.section-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.3), transparent);
+}
+
+/* --- Glow Card Hover --- */
+.glow-card {
+    position: relative;
+    transition: all 0.4s ease;
+}
+.glow-card::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, rgba(6, 182, 212, 0.3), rgba(236, 72, 153, 0.3), rgba(251, 191, 36, 0.3));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    z-index: -1;
+}
+.glow-card:hover::before {
+    opacity: 1;
+}
+.glow-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -10px rgba(6, 182, 212, 0.15);
+}
+
+/* --- Pulse Glow --- */
+.pulse-glow {
+    animation: pulseGlow 3s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.2); }
+    50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.4), 0 0 60px rgba(236, 72, 153, 0.2); }
+}
+
+/* --- Custom Scrollbar --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #06b6d4, #ec4899);
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #22c55e, #fbbf24);
+}
+
+/* --- Selection --- */
+::selection {
+    background: rgba(6, 182, 212, 0.4);
+    color: white;
+}
+::-moz-selection {
+    background: rgba(6, 182, 212, 0.4);
+    color: white;
+}
+
+/* --- Trippy Mobile Menu --- */
 .trippy-menu-overlay {
     animation: trippy-menu-fade-in 0.4s ease-out;
-    transform: translateZ(0);
-    -webkit-transform: translateZ(0);
 }
 
 .trippy-menu-orb-1 {
     background: radial-gradient(circle, #06b6d4 0%, transparent 70%);
     animation: trippy-menu-float-1 8s ease-in-out infinite;
 }
-
 .trippy-menu-orb-2 {
     background: radial-gradient(circle, #ec4899 0%, transparent 70%);
     animation: trippy-menu-float-2 10s ease-in-out infinite;
     animation-delay: -2s;
 }
-
 .trippy-menu-orb-3 {
     background: radial-gradient(circle, #fbbf24 0%, transparent 70%);
     animation: trippy-menu-float-3 12s ease-in-out infinite;
@@ -559,7 +446,6 @@ html {
     background: linear-gradient(90deg, transparent, #06b6d4, transparent);
     transition: width 0.3s ease;
 }
-
 .trippy-menu-link::after {
     content: '';
     position: absolute;
@@ -571,66 +457,167 @@ html {
     background: linear-gradient(90deg, transparent, #ec4899, transparent);
     transition: width 0.3s ease;
 }
-
 .trippy-menu-link:hover::before,
 .trippy-menu-link:hover::after {
     width: 15px;
 }
 
 @keyframes trippy-menu-fade-in {
-    from {
-        opacity: 0;
-        backdrop-filter: blur(0px);
-    }
-    to {
-        opacity: 1;
-        backdrop-filter: blur(12px);
-    }
+    from { opacity: 0; backdrop-filter: blur(0px); }
+    to { opacity: 1; backdrop-filter: blur(12px); }
 }
-
 @keyframes trippy-menu-slide-in {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+    from { opacity: 0; transform: translateY(30px) scale(0.9); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
 }
-
 @keyframes trippy-menu-float-1 {
-    0%, 100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    33% {
-        transform: translate(40px, -40px) scale(1.2) rotate(120deg);
-    }
-    66% {
-        transform: translate(-30px, 30px) scale(0.8) rotate(240deg);
-    }
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(40px, -40px) scale(1.2) rotate(120deg); }
+    66% { transform: translate(-30px, 30px) scale(0.8) rotate(240deg); }
 }
-
 @keyframes trippy-menu-float-2 {
-    0%, 100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(-50px, 50px) scale(1.3) rotate(-120deg); }
+    66% { transform: translate(40px, -30px) scale(0.9) rotate(-240deg); }
+}
+@keyframes trippy-menu-float-3 {
+    0%, 100% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    33% { transform: translate(30px, 50px) scale(1.1) rotate(90deg); }
+    66% { transform: translate(-40px, -40px) scale(0.95) rotate(180deg); }
+}
+
+/* --- Shimmer effect --- */
+.shimmer {
+    position: relative;
+    overflow: hidden;
+}
+.shimmer::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+    animation: shimmer 3s ease-in-out infinite;
+}
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
+
+/* --- Liquid divider --- */
+.liquid-divider {
+    position: relative;
+    height: 60px;
+    overflow: hidden;
+}
+.liquid-divider svg {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+/* --- Mobile Optimizations --- */
+@media (max-width: 640px) {
+    button, a, [role="button"] {
+        min-height: 44px;
+        min-width: 44px;
     }
-    33% {
-        transform: translate(-50px, 50px) scale(1.3) rotate(-120deg);
+    input, textarea, select {
+        font-size: 16px !important;
     }
-    66% {
-        transform: translate(40px, -30px) scale(0.9) rotate(-240deg);
+    * {
+        -webkit-tap-highlight-color: rgba(6, 182, 212, 0.2);
     }
 }
 
-@keyframes trippy-menu-float-3 {
-    0%, 100% {
-        transform: translate(0, 0) scale(1) rotate(0deg);
-    }
-    33% {
-        transform: translate(30px, 50px) scale(1.1) rotate(90deg);
-    }
-    66% {
-        transform: translate(-40px, -40px) scale(0.95) rotate(180deg);
-    }
+/* --- Product Card --- */
+.product-card {
+    transition: transform 0.3s ease;
+}
+
+/* --- Section Headings --- */
+.section-heading {
+    font-family: 'Bungee', cursive;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    line-height: 0.95;
+}
+
+/* --- Neon Underline --- */
+.neon-underline {
+    position: relative;
+    display: inline-block;
+}
+.neon-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #06b6d4, #ec4899, #fbbf24);
+    border-radius: 2px;
+    box-shadow: 0 0 8px rgba(6, 182, 212, 0.5);
+}
+
+/* --- Psychedelic Nav Line --- */
+.psychedelic-line {
+    animation: psychedelic-shift 4s linear infinite;
+    background-size: 200% 100%;
+    background-image: linear-gradient(90deg, transparent, #06b6d4, #ec4899, #fbbf24, #22c55e, #06b6d4, transparent);
+}
+
+@keyframes psychedelic-shift {
+    0% { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+/* --- Psychedelic Hue Pulse (for hero sections) --- */
+.psychedelic-pulse {
+    animation: psychedelic-hue 8s ease-in-out infinite;
+}
+
+@keyframes psychedelic-hue {
+    0%, 100% { filter: hue-rotate(0deg) brightness(1); }
+    25% { filter: hue-rotate(30deg) brightness(1.05); }
+    50% { filter: hue-rotate(-20deg) brightness(1.02); }
+    75% { filter: hue-rotate(15deg) brightness(1.08); }
+}
+
+/* --- Rainbow border glow --- */
+.rainbow-glow {
+    position: relative;
+}
+.rainbow-glow::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    background: conic-gradient(from var(--angle, 0deg), #06b6d4, #ec4899, #fbbf24, #22c55e, #a855f7, #06b6d4);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    z-index: -1;
+    animation: rainbow-rotate 4s linear infinite;
+}
+.rainbow-glow:hover::before {
+    opacity: 0.7;
+}
+
+@keyframes rainbow-rotate {
+    from { --angle: 0deg; filter: hue-rotate(0deg); }
+    to { --angle: 360deg; filter: hue-rotate(360deg); }
+}
+
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+/* --- Performance --- */
+img {
+    backface-visibility: hidden;
 }

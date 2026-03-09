@@ -51,7 +51,7 @@ const Cart = () => {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center max-w-md mx-auto px-4">
           <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-zinc-900 flex items-center justify-center">
             <ShoppingBag className="w-16 h-16 text-gray-600" />
@@ -73,7 +73,7 @@ const Cart = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
+    <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="mb-8 sm:mb-12">

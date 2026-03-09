@@ -33,7 +33,7 @@ const BlogDetail = () => {
 
   if (!blog) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center">
           <p className="text-white text-2xl mb-4">Blog post not found</p>
           <Link
@@ -49,7 +49,7 @@ const BlogDetail = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
+    <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm">
       {/* Breadcrumb */}
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center space-x-2 text-sm">

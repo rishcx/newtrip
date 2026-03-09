@@ -209,7 +209,7 @@ const Checkout = () => {
 
   if (processing) {
     return (
-      <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm flex items-center justify-center">
+      <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-16 h-16 text-cyan-400 animate-spin mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-white mb-2">Processing Payment...</h2>
@@ -220,7 +220,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen pt-20 bg-black/60 backdrop-blur-sm">
+    <div className="min-h-screen pt-28 bg-black/60 backdrop-blur-sm">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-black text-white mb-6 sm:mb-8">
           Checkout

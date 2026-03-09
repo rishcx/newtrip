@@ -18,12 +18,15 @@ import TrippyTalesPage from "./pages/TrippyTalesPage";
 import BlogDetail from "./pages/BlogDetail";
 import { Toaster } from "./components/ui/toaster";
 import Footer from "./components/Footer";
+import MusicPlayer from "./components/MusicPlayer";
+import CursorGlow from "./components/CursorGlow";
 
 function App() {
   return (
     <AuthProvider>
       <div className="App min-h-screen" style={{ backgroundColor: 'transparent' }}>
         <BrowserRouter>
+          <CursorGlow />
           <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
@@ -41,6 +44,7 @@ function App() {
             <Route path="/admin" element={<Admin />} />
           </Routes>
           <Footer />
+          <MusicPlayer />
           <Toaster />
         </BrowserRouter>
       </div>
