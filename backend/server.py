@@ -484,6 +484,12 @@ async def delete_product(
         if not existing.data:
             raise HTTPException(status_code=404, detail="Product not found")
         
+        # Delete related order_items first (foreign key constraint)
+        try:
+            supabase.table("order_items").delete().eq("product_id", product_id).execute()
+        except Exception:
+            pass  # No order_items to delete, that's fine
+
         # Delete product
         response = supabase.table("products").delete().eq("id", product_id).execute()
         
