@@ -19,6 +19,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
         <title>TrippyDrip | E-commerce App</title>
+        <link rel="preload" as="image" href="/trippydrip-bg.jpg" fetchpriority="high">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Righteous&family=Fredoka+One&family=Bangers&family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -41,6 +42,10 @@
                 min-height: 100vh;
                 position: relative;
                 overflow-x: hidden;
+                /* Instant blurred placeholder while real bg loads */
+                background-image:
+                    url('/trippydrip-bg.jpg'),
+                    url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDACgcHiMeGSgjISMtKygwPGRBPDc3PHtYXUlkkYCZlo+AjIqgtObDoKrarYqMyP/L2u71////m8H////6/+b9//j/2wBDASstLTw1PHZBQXb4pYyl+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj4+Pj/wAARCAAWACgDASIAAhEBAxEB/8QAGQAAAgMBAAAAAAAAAAAAAAAAAAQBAgUD/8QAIxAAAQQDAAIBBQAAAAAAAAAAAQACAxESITEEIlETIzJBkf/EABcBAAMBAAAAAAAAAAAAAAAAAAACAwH/xAAZEQACAwEAAAAAAAAAAAAAAAAAAQIRITH/2gAMAwEAAhEDEQA/AM2OPI70ArONNOI3wlSweoPwbVo3tMpL6LQdjqo8wCkchaQSARw3+0xELsgVY4dgqI2wkFxFNLqAvQTjI/H+mGWCSbB4Qssx6Z0rcp8W71tCZczHyH4EAnQJQpylTKKkhbH2FLg+2P71CFSfRCWTGN+TR63+JWxA9k0TZC2j3+IQlARn+55Lxyzo/CEIQxo8P//Z');
             }
             @supports (-webkit-overflow-scrolling: touch) {
                 body {
