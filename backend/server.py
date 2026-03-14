@@ -578,6 +578,36 @@ async def submit_contact(contact: ContactMessageRequest):
         raise HTTPException(status_code=500, detail="Failed to submit message")
 
 
+# Admin Contact Messages Endpoint
+@api_router.get("/admin/messages")
+async def get_contact_messages(admin_info: dict = Depends(get_admin_info)):
+    """Get all contact messages (Admin only)"""
+    try:
+        response = supabase.table("contact_messages").select("*").order("created_at", desc=True).execute()
+        messages = response.data if response.data else []
+        logger.info(f"Admin {admin_info['admin_id']} fetched {len(messages)} contact messages")
+        return {"success": True, "messages": messages, "count": len(messages)}
+    except Exception as e:
+        error_msg = str(e)
+        if "relation" in error_msg and "does not exist" in error_msg:
+            return {"success": True, "messages": [], "count": 0,
+                    "note": "contact_messages table does not exist yet. It will be created when the first message is submitted."}
+        logger.error(f"Error fetching contact messages: {error_msg}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch messages: {error_msg}")
+
+
+@api_router.delete("/admin/messages/{message_id}")
+async def delete_contact_message(message_id: str, admin_info: dict = Depends(get_admin_info)):
+    """Delete a contact message (Admin only)"""
+    try:
+        supabase.table("contact_messages").delete().eq("id", message_id).execute()
+        logger.info(f"Admin {admin_info['admin_id']} deleted message {message_id}")
+        return {"success": True}
+    except Exception as e:
+        logger.error(f"Error deleting message: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to delete message")
+
+
 # Profile Endpoints
 @api_router.get("/profile")
 async def get_profile(user_id: Annotated[str, Depends(verify_jwt)]):

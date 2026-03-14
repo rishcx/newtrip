@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
-import { Loader2, Plus, Trash2, Save, X } from 'lucide-react';
+import { Loader2, Plus, Trash2, Save, X, MessageSquare, Mail, Clock } from 'lucide-react';
 import { toast } from '../hooks/use-toast';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 
@@ -33,6 +33,9 @@ const Admin = () => {
   const [products, setProducts] = useState([]);
   const [loadingProducts, setLoadingProducts] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
+  const [deletingMsgId, setDeletingMsgId] = useState(null);
 
   // Verify and store credentials
   const handleLogin = async () => {
@@ -162,10 +165,11 @@ const Admin = () => {
     verifyStoredCredentials();
   }, []);
 
-  // Load products when authenticated
+  // Load products and messages when authenticated
   React.useEffect(() => {
     if (authenticated && adminKey && adminId) {
       loadProducts();
+      loadMessages();
     }
   }, [authenticated]);
 
@@ -393,6 +397,45 @@ const Admin = () => {
     }
   };
 
+  const loadMessages = async () => {
+    const key = adminKey || sessionStorage.getItem('admin_key');
+    const id = adminId || sessionStorage.getItem('admin_id');
+    if (!key || !id) return;
+
+    setLoadingMessages(true);
+    try {
+      const response = await fetch(`${BACKEND_URL}/admin/messages`, {
+        headers: { 'X-Admin-Key': key, 'X-Admin-ID': id }
+      });
+      const data = await response.json();
+      if (data.success && data.messages) {
+        setMessages(data.messages);
+      }
+    } catch (error) {
+      console.error('Error loading messages:', error);
+    } finally {
+      setLoadingMessages(false);
+    }
+  };
+
+  const handleDeleteMessage = async (messageId) => {
+    setDeletingMsgId(messageId);
+    try {
+      const response = await fetch(`${BACKEND_URL}/admin/messages/${messageId}`, {
+        method: 'DELETE',
+        headers: { 'X-Admin-Key': adminKey, 'X-Admin-ID': adminId }
+      });
+      if (response.ok) {
+        setMessages(prev => prev.filter(m => m.id !== messageId));
+        toast({ title: "Message deleted" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Failed to delete message", variant: "destructive" });
+    } finally {
+      setDeletingMsgId(null);
+    }
+  };
+
   const handleLogout = () => {
     sessionStorage.removeItem('admin_key');
     sessionStorage.removeItem('admin_id');
@@ -536,6 +579,72 @@ const Admin = () => {
                     )}
                     Delete
                   </Button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Contact Messages */}
+        <div className="bg-black/80 backdrop-blur-lg rounded-2xl p-6 sm:p-8 border border-magenta-500/20 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+              <MessageSquare className="w-6 h-6 text-magenta-400" />
+              Contact Messages ({messages.length})
+            </h2>
+            <Button
+              onClick={loadMessages}
+              variant="ghost"
+              className="text-white hover:bg-magenta-500/10 hover:text-magenta-400"
+              disabled={loadingMessages}
+            >
+              {loadingMessages ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Refresh'}
+            </Button>
+          </div>
+          {loadingMessages ? (
+            <div className="flex justify-center py-8">
+              <Loader2 className="w-8 h-8 text-magenta-400 animate-spin" />
+            </div>
+          ) : messages.length === 0 ? (
+            <p className="text-gray-400 text-center py-8">No contact messages yet.</p>
+          ) : (
+            <div className="space-y-3 max-h-[500px] overflow-y-auto">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800 hover:border-magenta-500/30 transition-all"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-wrap items-center gap-2 mb-1">
+                        <span className="text-white font-bold text-sm">{msg.name}</span>
+                        <span className="text-gray-500 text-xs">•</span>
+                        <a href={`mailto:${msg.email}`} className="text-cyan-400 text-xs hover:underline flex items-center gap-1">
+                          <Mail className="w-3 h-3" />
+                          {msg.email}
+                        </a>
+                      </div>
+                      <p className="text-magenta-400 text-sm font-semibold mb-1">{msg.subject}</p>
+                      <p className="text-gray-300 text-sm whitespace-pre-wrap">{msg.message}</p>
+                      <div className="flex items-center gap-1 mt-2 text-gray-500 text-xs">
+                        <Clock className="w-3 h-3" />
+                        {msg.created_at ? new Date(msg.created_at).toLocaleString() : 'Unknown'}
+                      </div>
+                    </div>
+                    <Button
+                      onClick={() => handleDeleteMessage(msg.id)}
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-500 hover:text-red-400 hover:bg-red-500/10 flex-shrink-0"
+                      disabled={deletingMsgId === msg.id}
+                    >
+                      {deletingMsgId === msg.id ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Trash2 className="w-4 h-4" />
+                      )}
+                    </Button>
+                  </div>
                 </div>
               ))}
             </div>
