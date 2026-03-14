@@ -8,9 +8,9 @@ module.exports = {
   theme: {
   	extend: {
   		fontFamily: {
-  			'funky': ['Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
-  			'lemon-funky': ['Lemon Funky', 'Bungee', 'Righteous', 'cursive', 'sans-serif'],
-  			'trippy': ['Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
+  			'funky': ['Another Nothing', 'Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
+  			'soiglat': ['Another Nothing', 'Bungee', 'Righteous', 'cursive', 'sans-serif'],
+  			'trippy': ['Another Nothing', 'Bungee', 'Righteous', 'Fredoka One', 'cursive', 'sans-serif'],
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

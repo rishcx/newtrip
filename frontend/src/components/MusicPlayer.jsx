@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Volume2, VolumeX } from 'lucide-react';
 
 const YOUTUBE_VIDEO_ID = 'jSReLIp5Zxc';
@@ -6,29 +6,10 @@ const YOUTUBE_VIDEO_ID = 'jSReLIp5Zxc';
 const MusicPlayer = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [playerReady, setPlayerReady] = useState(false);
+  const [loading, setLoading] = useState(false);
   const playerRef = useRef(null);
   const containerRef = useRef(null);
-
-  // Load YouTube IFrame API once
-  useEffect(() => {
-    if (window.YT && window.YT.Player) {
-      initPlayer();
-      return;
-    }
-
-    // Load the API script
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-
-    window.onYouTubeIframeAPIReady = () => {
-      initPlayer();
-    };
-
-    return () => {
-      window.onYouTubeIframeAPIReady = null;
-    };
-  }, []);
+  const apiLoaded = useRef(false);
 
   const initPlayer = useCallback(() => {
     if (playerRef.current) return;
@@ -38,7 +19,7 @@ const MusicPlayer = () => {
       playerVars: {
         autoplay: 0,
         loop: 1,
-        playlist: YOUTUBE_VIDEO_ID, // Required for loop to work
+        playlist: YOUTUBE_VIDEO_ID,
         controls: 0,
         disablekb: 1,
         fs: 0,
@@ -50,9 +31,12 @@ const MusicPlayer = () => {
         onReady: () => {
           playerRef.current.setVolume(30);
           setPlayerReady(true);
+          setLoading(false);
+          // Auto-play since user just clicked
+          playerRef.current.playVideo();
+          setIsPlaying(true);
         },
         onStateChange: (event) => {
-          // If video ends and loop somehow fails, restart
           if (event.data === window.YT.PlayerState.ENDED) {
             playerRef.current.seekTo(0);
             playerRef.current.playVideo();
@@ -62,7 +46,32 @@ const MusicPlayer = () => {
     });
   }, []);
 
+  // Only load YouTube API when user first clicks play
+  const loadYouTubeAPI = useCallback(() => {
+    if (apiLoaded.current) return;
+    apiLoaded.current = true;
+    setLoading(true);
+
+    if (window.YT && window.YT.Player) {
+      initPlayer();
+      return;
+    }
+
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+
+    window.onYouTubeIframeAPIReady = () => {
+      initPlayer();
+    };
+  }, [initPlayer]);
+
   const toggleMusic = () => {
+    if (!apiLoaded.current) {
+      loadYouTubeAPI();
+      return;
+    }
+
     if (!playerRef.current || !playerReady) return;
 
     if (isPlaying) {
@@ -75,7 +84,7 @@ const MusicPlayer = () => {
 
   return (
     <>
-      {/* Hidden YouTube player */}
+      {/* Hidden YouTube player — only rendered after first interaction */}
       <div style={{ position: 'fixed', top: -9999, left: -9999, width: 1, height: 1, overflow: 'hidden', pointerEvents: 'none' }}>
         <div id="yt-music-player" ref={containerRef} />
       </div>
@@ -88,9 +97,11 @@ const MusicPlayer = () => {
             ? 'bg-cyan-500/20 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.4)]'
             : 'bg-zinc-900/80 border-zinc-700 hover:border-cyan-500/30'
         } backdrop-blur-sm`}
-        title={isPlaying ? 'Pause music' : 'Play music'}
+        title={loading ? 'Loading...' : isPlaying ? 'Pause music' : 'Play music'}
       >
-        {isPlaying ? (
+        {loading ? (
+          <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        ) : isPlaying ? (
           <Volume2 className="w-5 h-5 text-cyan-400 animate-pulse" />
         ) : (
           <VolumeX className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />

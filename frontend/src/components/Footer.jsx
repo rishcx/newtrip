@@ -16,10 +16,10 @@ const Footer = () => {
         className="text-white/20 py-2 border-b border-zinc-800/50"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-8">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-10 sm:py-16">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-12 mb-8">
           {/* Brand Column */}
-          <div className="space-y-4">
+          <div className="space-y-4 col-span-2 md:col-span-1">
             <Link to="/" className="inline-block">
               <h2 className="text-2xl font-black trippy-text">TrippyDrip</h2>
             </Link>
@@ -100,7 +100,7 @@ const Footer = () => {
 
         {/* Trust Badges */}
         <div className="border-t border-zinc-800 pt-8 mt-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 mb-8">
             {[
               { Icon: Shield, color: 'cyan', title: 'Secure Payment', desc: 'SSL Encrypted' },
               { Icon: Truck, color: 'magenta', title: 'Free Shipping', desc: 'On orders $50+' },

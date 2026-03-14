@@ -57,7 +57,7 @@ const Navbar = () => {
       }`}
     >
       <div className="w-full px-4 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between h-24 sm:h-28">
+        <div className="flex items-center justify-between h-20 sm:h-28">
 
           {/* LEFT: Logo + Brand Name */}
           <Link to="/" className="flex items-center space-x-3 group flex-shrink-0">
@@ -65,24 +65,24 @@ const Navbar = () => {
               <img
                 src="/trippydrip-logo.png"
                 alt="TrippyDrip"
-                className="h-[70px] sm:h-[85px] w-auto object-contain "
+                className="h-[55px] sm:h-[85px] w-auto object-contain"
                 onError={() => setLogoError(true)}
               />
             ) : (
               <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-cyan-400 via-magenta-500 to-yellow-400 shadow-[0_0_25px_rgba(236,72,153,0.4)]">
-                <span className="text-white font-black text-2xl sm:text-3xl" style={{ fontFamily: "'Bungee', cursive" }}>T</span>
+                <span className="text-white font-black text-2xl sm:text-3xl" style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}>T</span>
               </div>
             )}
             <div className="flex flex-col leading-none">
               <span
                 className="text-xl sm:text-2xl font-black tracking-wide trippy-text"
-                style={{ fontFamily: "'Bungee', cursive" }}
+                style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}
               >
                 TRIPPYDRIP
               </span>
               <span
                 className="text-[9px] sm:text-[10px] tracking-[0.35em] uppercase text-gray-400 font-semibold mt-0.5"
-                style={{ fontFamily: "'Rajdhani', sans-serif" }}
+                style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
               >
                 EST. 2025
               </span>
@@ -101,7 +101,7 @@ const Navbar = () => {
                       ? 'text-white'
                       : 'text-gray-400 hover:text-white'
                   }`}
-                  style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 700 }}
+                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 700 }}
                 >
                   {link.name}
                   {location.pathname === link.path && (
@@ -150,7 +150,7 @@ const Navbar = () => {
               <Link to="/login">
                 <Button
                   className="bg-white text-black font-black text-sm tracking-[0.15em] uppercase px-7 py-2.5 rounded-sm hover:bg-cyan-400 hover:text-black transition-all duration-300 hover:scale-105"
-                  style={{ fontFamily: "'Rajdhani', sans-serif", fontWeight: 800 }}
+                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 800 }}
                 >
                   Login
                 </Button>
@@ -173,7 +173,7 @@ const Navbar = () => {
                 <Button
                   size="sm"
                   className="bg-white text-black font-black text-[11px] tracking-[0.12em] uppercase px-5 py-2 rounded-sm hover:bg-cyan-400 transition-all"
-                  style={{ fontFamily: "'Rajdhani', sans-serif" }}
+                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
                 >
                   Login
                 </Button>
@@ -239,7 +239,7 @@ const Navbar = () => {
                   }`}
                   style={{
                     animationDelay: `${index * 0.1}s`,
-                    fontFamily: "'Bungee', cursive",
+                    fontFamily: "'Another Nothing', 'Bungee', cursive",
                   }}
                 >
                   {link.name}
