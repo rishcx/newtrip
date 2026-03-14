@@ -121,13 +121,13 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-zinc-800 pt-8 mt-8">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <p className="text-gray-500 text-sm text-center md:text-left">
+            <p className="text-gray-400 text-sm text-center md:text-left">
               &copy; {new Date().getFullYear()} TrippyDrip. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center md:justify-end gap-4 text-sm">
-              <a href="#" className="text-gray-500 hover:text-cyan-400 transition-colors">Privacy Policy</a>
-              <a href="#" className="text-gray-500 hover:text-cyan-400 transition-colors">Terms of Service</a>
-              <a href="#" className="text-gray-500 hover:text-cyan-400 transition-colors">Refund Policy</a>
+              <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Privacy Policy</a>
+              <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Terms of Service</a>
+              <a href="#" className="text-gray-400 hover:text-cyan-400 transition-colors">Refund Policy</a>
             </div>
           </div>
         </div>

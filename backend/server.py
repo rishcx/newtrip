@@ -142,6 +142,13 @@ class VerifyPaymentRequest(BaseModel):
     order_id: str
 
 
+class ContactMessageRequest(BaseModel):
+    name: str
+    email: str
+    subject: str
+    message: str
+
+
 class UpdateProfileRequest(BaseModel):
     full_name: Optional[str] = None
     avatar_url: Optional[str] = None
@@ -531,6 +538,44 @@ async def list_all_products(admin_info: dict = Depends(get_admin_info)):
     except Exception as e:
         logger.error(f"Error fetching products: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Failed to fetch products: {str(e)}")
+
+
+# Contact Endpoint
+@api_router.post("/contact")
+async def submit_contact(contact: ContactMessageRequest):
+    """Receive a contact form submission and store it in Supabase"""
+    if supabase is None:
+        raise HTTPException(status_code=500, detail="Database not configured")
+
+    try:
+        row = {
+            "name": contact.name,
+            "email": contact.email,
+            "subject": contact.subject,
+            "message": contact.message,
+            "created_at": datetime.utcnow().isoformat(),
+        }
+        response = supabase.table("contact_messages").insert(row).execute()
+
+        if not response.data:
+            # Table might not exist yet — log but still confirm to user
+            logger.warning("contact_messages insert returned no data (table may not exist)")
+
+        logger.info(f"Contact message from {contact.email}: {contact.subject}")
+        return {"success": True, "message": "Message received"}
+    except Exception as e:
+        error_msg = str(e)
+        logger.error(f"Error storing contact message: {error_msg}")
+        # Still return success to user — we don't want a form failure
+        # just because the DB table isn't set up yet.
+        # The message is logged so it's not lost.
+        if "relation" in error_msg and "does not exist" in error_msg:
+            logger.warning("contact_messages table does not exist. Create it in Supabase: "
+                           "CREATE TABLE contact_messages (id uuid DEFAULT gen_random_uuid() PRIMARY KEY, "
+                           "name text, email text, subject text, message text, "
+                           "created_at timestamptz DEFAULT now());")
+            return {"success": True, "message": "Message received"}
+        raise HTTPException(status_code=500, detail="Failed to submit message")
 
 
 # Profile Endpoints

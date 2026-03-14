@@ -61,7 +61,7 @@ const Shop = () => {
             <span className="trippy-text">SHOP</span> ALL
           </h1>
           <p
-            className="text-[11px] sm:text-sm text-gray-500 mt-3 sm:mt-4 tracking-[0.15em] sm:tracking-[0.2em] uppercase"
+            className="text-[11px] sm:text-sm text-gray-400 mt-3 sm:mt-4 tracking-[0.15em] sm:tracking-[0.2em] uppercase"
             style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 600 }}
           >
             Premium quality &bull; Free shipping $50+ &bull; 30-day returns
@@ -88,7 +88,7 @@ const Shop = () => {
                 className={`text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 pb-1 border-b-2 whitespace-nowrap flex-shrink-0 ${
                   selectedCategory === category
                     ? 'text-white border-white'
-                    : 'text-gray-600 border-transparent hover:text-gray-300'
+                    : 'text-gray-500 border-transparent hover:text-gray-200'
                 }`}
                 style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 700 }}
               >
@@ -99,7 +99,7 @@ const Shop = () => {
 
           {/* Sort + Count */}
           <div className="flex items-center justify-between sm:justify-end gap-4">
-            <span className="text-xs text-gray-600 tracking-wider uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
+            <span className="text-xs text-gray-500 tracking-wider uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
               {!loading && `${sortedProducts.length} products`}
             </span>
             <select
@@ -122,7 +122,7 @@ const Shop = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
             <Loader2 className="w-8 h-8 text-white animate-spin" />
-            <span className="text-xs text-gray-500 tracking-[0.2em] uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
+            <span className="text-xs text-gray-400 tracking-[0.2em] uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
               Loading...
             </span>
           </div>

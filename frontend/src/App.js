@@ -7,6 +7,7 @@ import { Toaster } from "./components/ui/toaster";
 import Footer from "./components/Footer";
 import MusicPlayer from "./components/MusicPlayer";
 import CursorGlow from "./components/CursorGlow";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Lazy-loaded pages for code splitting
 const Home = lazy(() => import("./pages/Home"));
@@ -35,6 +36,7 @@ function App() {
     <AuthProvider>
       <div className="App min-h-screen" style={{ backgroundColor: 'transparent' }}>
         <BrowserRouter>
+          <ScrollToTop />
           <CursorGlow />
           <Navbar />
           <Suspense fallback={<PageLoader />}>

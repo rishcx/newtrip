@@ -77,7 +77,7 @@ const About = () => {
                   <val.icon className={`w-8 h-8 text-${val.color}-400`} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{val.title}</h3>
-                <p className="text-gray-400">{val.desc}</p>
+                <p className="text-gray-300">{val.desc}</p>
               </div>
             </ScrollReveal>
           ))}

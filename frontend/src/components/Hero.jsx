@@ -182,15 +182,15 @@ const Hero = () => {
         <div className="mt-12 sm:mt-24 grid grid-cols-3 gap-3 sm:gap-8 max-w-2xl mx-auto px-2 sm:px-4 hero-stats">
           <div className="text-center stat-item">
             <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-cyan-400 mb-0.5 sm:mb-2 tabular-nums">500+</div>
-            <div className="text-gray-400 text-[10px] sm:text-sm tracking-wide">Trippy Designs</div>
+            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Trippy Designs</div>
           </div>
           <div className="text-center stat-item" style={{ animationDelay: '0.15s' }}>
             <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-magenta-400 mb-0.5 sm:mb-2 tabular-nums">10K+</div>
-            <div className="text-gray-400 text-[10px] sm:text-sm tracking-wide">Happy Vibers</div>
+            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Happy Vibers</div>
           </div>
           <div className="text-center stat-item" style={{ animationDelay: '0.3s' }}>
             <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-yellow-400 mb-0.5 sm:mb-2 tabular-nums">100%</div>
-            <div className="text-gray-400 text-[10px] sm:text-sm tracking-wide">Psychedelic</div>
+            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Psychedelic</div>
           </div>
         </div>
       </div>

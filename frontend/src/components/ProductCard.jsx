@@ -40,7 +40,7 @@ const ProductCard = ({ product }) => {
           {product.name}
         </h3>
         <p
-          className="text-sm sm:text-base text-gray-400 font-semibold"
+          className="text-sm sm:text-base text-gray-300 font-semibold"
           style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
         >
           ${product.price}.00

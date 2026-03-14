@@ -128,7 +128,7 @@ const Home = () => {
                   <h3 className="text-base sm:text-lg font-black text-white mb-2 tracking-wider" style={{ fontFamily: "'Another Nothing', 'Righteous', cursive" }}>
                     {feature.title}
                   </h3>
-                  <p className="text-gray-500 text-xs sm:text-sm leading-relaxed tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
                     {feature.desc}
                   </p>
                 </div>
@@ -218,7 +218,7 @@ const Home = () => {
               <span className="trippy-text">TRIPPY TALES</span>
             </h2>
 
-            <p className="text-sm sm:text-base lg:text-lg text-gray-400 mb-10 max-w-2xl mx-auto tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-10 max-w-2xl mx-auto tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
               Dive into stories, insights, and cosmic wisdom from the world of psychedelic streetwear. Where fashion meets consciousness.
             </p>
 
@@ -249,7 +249,7 @@ const Home = () => {
                 <div className="text-center p-4 sm:p-5 bg-white/[0.02] backdrop-blur-sm rounded-xl border border-white/5 hover:border-white/10 transition-all duration-300">
                   <div className={`text-xl sm:text-2xl text-${item.color}-400 mb-2`}>{item.symbol}</div>
                   <h3 className="text-white text-xs sm:text-sm font-black tracking-wider uppercase mb-0.5" style={{ fontFamily: "'Another Nothing', 'Righteous', cursive" }}>{item.title}</h3>
-                  <p className="text-gray-600 text-[10px] sm:text-xs tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>{item.desc}</p>
+                  <p className="text-gray-400 text-[10px] sm:text-xs tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>{item.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -269,7 +269,7 @@ const Home = () => {
             <h2 className="text-2xl sm:text-4xl lg:text-6xl font-black text-white mb-4 sm:mb-6 leading-[0.95]" style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}>
               READY TO{' '}<span className="trippy-text inline-block">ELEVATE</span>{' '}YOUR STYLE?
             </h2>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-400 mb-8 tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
+            <p className="text-sm sm:text-base lg:text-lg text-gray-300 mb-8 tracking-wide" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 500 }}>
               Join thousands of vibers rocking TrippyDrip worldwide.
             </p>
             <Link
