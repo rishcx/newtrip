@@ -1,9 +1,22 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Zap } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
+
+const HERO_VIDEO_SRC = '/hero.mp4';
+const HERO_POSTER = '/trippydrip-bg.jpg';
 
 const Hero = () => {
   const canvasRef = useRef(null);
+  const videoRef = useRef(null);
+  const [videoOk, setVideoOk] = useState(true);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobileViewport(window.innerWidth < 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -29,7 +42,7 @@ const Hero = () => {
     };
     window.addEventListener('resize', debouncedResize);
 
-    const colors = ['#06b6d4', '#ec4899', '#fbbf24', '#22c55e', '#a855f7'];
+    const colors = ['#ffffff', '#d4d4d8', '#a1a1aa', '#e5e7eb'];
     for (let i = 0; i < particleCount; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -38,7 +51,7 @@ const Hero = () => {
         speedX: (Math.random() - 0.5) * 0.4,
         speedY: (Math.random() - 0.5) * 0.4,
         opacity: Math.random() * 0.4 + 0.1,
-        color: colors[Math.floor(Math.random() * 5)],
+        color: colors[Math.floor(Math.random() * colors.length)],
         pulse: Math.random() * Math.PI * 2,
         pulseSpeed: Math.random() * 0.015 + 0.005,
       });
@@ -92,7 +105,7 @@ const Hero = () => {
 
       // Connections — desktop only
       if (connectionDistance > 0) {
-        ctx.strokeStyle = '#06b6d4';
+        ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 0.5;
         for (let i = 0; i < particles.length; i++) {
           for (let j = i + 1; j < particles.length; j++) {
@@ -125,6 +138,34 @@ const Hero = () => {
 
   return (
     <div className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
+      {/* Fixed background MP4 — desktop only for perf; mobile uses poster only */}
+      {videoOk && !isMobileViewport && (
+        <video
+          ref={videoRef}
+          className="hero-video-bg"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="auto"
+          poster={HERO_POSTER}
+          onError={() => setVideoOk(false)}
+        >
+          <source src={HERO_VIDEO_SRC} type="video/mp4" />
+        </video>
+      )}
+      {/* Mobile poster fallback (also acts as fallback if video missing) */}
+      {(isMobileViewport || !videoOk) && (
+        <div
+          className="hero-video-bg"
+          style={{
+            backgroundImage: `url(${HERO_POSTER})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+      )}
+
       {/* Particle Canvas */}
       <canvas
         ref={canvasRef}
@@ -132,22 +173,15 @@ const Hero = () => {
         style={{ pointerEvents: 'none' }}
       />
 
-      {/* Animated gradient orbs — smaller on mobile */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="hero-orb-1 absolute top-1/4 left-[16%] w-[250px] h-[250px] sm:w-[400px] sm:h-[400px] lg:w-[500px] lg:h-[500px] rounded-full blur-[80px] sm:blur-[120px] opacity-20"></div>
-        <div className="hero-orb-2 absolute bottom-1/4 right-[16%] w-[300px] h-[300px] sm:w-[450px] sm:h-[450px] lg:w-[600px] lg:h-[600px] rounded-full blur-[80px] sm:blur-[120px] opacity-20"></div>
-        <div className="hero-orb-3 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] sm:w-[300px] sm:h-[300px] lg:w-[400px] lg:h-[400px] rounded-full blur-[60px] sm:blur-[100px] opacity-10"></div>
-      </div>
-
-      {/* Very subtle overlay */}
-      <div className="absolute inset-0 bg-black/10 z-[1]"></div>
+      {/* Subtle dark overlay for readability */}
+      <div className="absolute inset-0 bg-black/30 z-[1]"></div>
 
       {/* Content */}
       <div className="relative z-10 text-center px-5 sm:px-6 lg:px-8 max-w-5xl mx-auto w-full">
         {/* Badge */}
-        <div className="inline-flex items-center space-x-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-cyan-500/10 border border-cyan-500/30 backdrop-blur-sm mb-5 sm:mb-6 hero-badge">
-          <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-cyan-400" />
-          <span className="text-cyan-400 text-xs sm:text-sm font-medium tracking-wider uppercase">New Collection Live</span>
+        <div className="inline-flex items-center space-x-2 px-4 py-1.5 sm:py-2 rounded-full bg-white/5 border border-white/20 backdrop-blur-sm mb-5 sm:mb-6 hero-badge">
+          <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" aria-hidden />
+          <span className="text-white text-xs sm:text-sm font-semibold tracking-[0.2em] uppercase">New Collection Live</span>
         </div>
 
         <h1 className="hero-title text-[2.5rem] sm:text-6xl lg:text-8xl mt-2 leading-[0.95]">
@@ -156,23 +190,22 @@ const Hero = () => {
           <span className="block glitch-text text-[2rem] sm:text-5xl lg:text-7xl mt-1.5 sm:mt-2" data-text="THE MATRIX">THE MATRIX</span>
         </h1>
 
-        <p className="text-sm sm:text-xl lg:text-2xl text-gray-300 mb-8 sm:mb-14 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4 hero-subtitle mt-6">
+        <p className="text-base sm:text-xl lg:text-2xl text-gray-100 mb-8 sm:mb-14 max-w-3xl mx-auto leading-relaxed px-2 sm:px-4 hero-subtitle mt-6">
           Psychedelic streetwear that bends reality. Where neon dreams meet liquid swirls in wearable art.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 sm:px-4 hero-buttons">
           <Link
             to="/shop"
-            className="group relative w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 bg-gradient-to-r from-cyan-500 to-magenta-500 text-white font-bold text-base sm:text-lg rounded-full overflow-hidden transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(6,182,212,0.6)] inline-flex items-center justify-center space-x-2"
+            className="group w-full sm:w-auto px-8 py-4 bg-white text-black font-bold text-base sm:text-lg rounded-full transition-colors duration-300 hover:bg-zinc-200 inline-flex items-center justify-center space-x-2"
           >
-            <span className="relative z-10">Explore Collection</span>
-            <ArrowRight className="w-5 h-5 relative z-10 group-hover:translate-x-1 transition-transform" />
-            <div className="absolute inset-0 bg-gradient-to-r from-magenta-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <span>Explore Collection</span>
+            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
 
           <Link
             to="/about"
-            className="w-full sm:w-auto px-7 sm:px-8 py-3.5 sm:py-4 bg-transparent border-2 border-white/30 text-white font-bold text-base sm:text-lg rounded-full transition-all duration-300 hover:bg-white/10 hover:border-white hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.15)] text-center backdrop-blur-sm"
+            className="w-full sm:w-auto px-8 py-4 bg-transparent border border-white/40 text-white font-bold text-base sm:text-lg rounded-full transition-colors duration-300 hover:bg-white hover:text-black text-center backdrop-blur-sm"
           >
             Our Story
           </Link>
@@ -181,16 +214,16 @@ const Hero = () => {
         {/* Stats */}
         <div className="mt-12 sm:mt-24 grid grid-cols-3 gap-3 sm:gap-8 max-w-2xl mx-auto px-2 sm:px-4 hero-stats">
           <div className="text-center stat-item">
-            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-cyan-400 mb-0.5 sm:mb-2 tabular-nums">500+</div>
-            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Trippy Designs</div>
+            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-0.5 sm:mb-2 tabular-nums">500+</div>
+            <div className="text-gray-100 text-xs sm:text-sm tracking-wide font-medium">Trippy Designs</div>
           </div>
           <div className="text-center stat-item" style={{ animationDelay: '0.15s' }}>
-            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-magenta-400 mb-0.5 sm:mb-2 tabular-nums">10K+</div>
-            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Happy Vibers</div>
+            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-0.5 sm:mb-2 tabular-nums">10K+</div>
+            <div className="text-gray-100 text-xs sm:text-sm tracking-wide font-medium">Happy Vibers</div>
           </div>
           <div className="text-center stat-item" style={{ animationDelay: '0.3s' }}>
-            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-yellow-400 mb-0.5 sm:mb-2 tabular-nums">100%</div>
-            <div className="text-gray-300 text-[10px] sm:text-sm tracking-wide">Psychedelic</div>
+            <div className="text-xl sm:text-3xl lg:text-4xl font-bold text-white mb-0.5 sm:mb-2 tabular-nums">100%</div>
+            <div className="text-gray-100 text-xs sm:text-sm tracking-wide font-medium">Psychedelic</div>
           </div>
         </div>
       </div>
@@ -198,9 +231,9 @@ const Hero = () => {
       {/* Scroll Indicator */}
       <div className="absolute bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-10">
         <div className="flex flex-col items-center space-y-2 animate-bounce">
-          <span className="text-gray-500 text-[10px] sm:text-xs tracking-widest uppercase">Scroll</span>
-          <div className="w-5 h-8 border-2 border-cyan-400/40 rounded-full flex items-start justify-center p-1.5">
-            <div className="w-1 h-2 bg-cyan-400 rounded-full scroll-dot"></div>
+          <span className="text-gray-300 text-[11px] sm:text-xs tracking-widest uppercase font-medium">Scroll</span>
+          <div className="w-5 h-8 border border-white/40 rounded-full flex items-start justify-center p-1.5">
+            <div className="w-1 h-2 bg-white rounded-full scroll-dot"></div>
           </div>
         </div>
       </div>

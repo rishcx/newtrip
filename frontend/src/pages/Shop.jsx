@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ProductCard from '../components/ProductCard';
 import { ScrollReveal } from '../hooks/useScrollReveal';
-import MarqueeStrip from '../components/MarqueeStrip';
 import { Loader2, Ghost } from 'lucide-react';
 import { cachedFetch } from '../lib/apiCache';
 
@@ -52,29 +51,22 @@ const Shop = () => {
 
       {/* Hero Banner */}
       <div className="relative py-10 sm:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px]"></div>
         <div className="max-w-7xl mx-auto text-center relative z-10 px-5">
           <h1
             className="text-4xl sm:text-6xl lg:text-8xl font-black text-white leading-[0.9] tracking-tight"
-            style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}
+            style={{ fontFamily: "'Vorcas', 'Bungee', cursive" }}
           >
             <span className="trippy-text">SHOP</span> ALL
           </h1>
           <p
-            className="text-[11px] sm:text-sm text-gray-400 mt-3 sm:mt-4 tracking-[0.15em] sm:tracking-[0.2em] uppercase"
-            style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 600 }}
+            className="text-sm sm:text-base text-gray-200 mt-4 tracking-[0.15em] sm:tracking-[0.2em] uppercase"
+            style={{ fontFamily: "'Vorcas', sans-serif", fontWeight: 600 }}
           >
-            Premium quality &bull; Free shipping $50+ &bull; 30-day returns
+            The full collection
           </p>
         </div>
       </div>
-
-      {/* Marquee */}
-      <MarqueeStrip
-        messages={['FREE SHIPPING', 'NEW DROPS', 'LIMITED EDITION', 'COSMIC DRIP', 'PSYCHEDELIC ART', 'STAY TRIPPY']}
-        className="text-white/30 border-y border-white/5"
-        speed={35}
-      />
 
       {/* Filters Bar */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-10 py-6 sm:py-8">
@@ -88,9 +80,9 @@ const Shop = () => {
                 className={`text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 pb-1 border-b-2 whitespace-nowrap flex-shrink-0 ${
                   selectedCategory === category
                     ? 'text-white border-white'
-                    : 'text-gray-500 border-transparent hover:text-gray-200'
+                    : 'text-gray-300 border-transparent hover:text-white'
                 }`}
-                style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 700 }}
+                style={{ fontFamily: "'Vorcas', sans-serif", fontWeight: 700 }}
               >
                 {category}
               </button>
@@ -99,14 +91,14 @@ const Shop = () => {
 
           {/* Sort + Count */}
           <div className="flex items-center justify-between sm:justify-end gap-4">
-            <span className="text-xs text-gray-500 tracking-wider uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
+            <span className="text-sm text-gray-200 tracking-wider uppercase" style={{ fontFamily: "'Vorcas', sans-serif" }}>
               {!loading && `${sortedProducts.length} products`}
             </span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-1.5 bg-transparent text-gray-400 border border-white/10 focus:border-white/30 focus:outline-none transition-all text-xs font-bold tracking-wider uppercase rounded-none"
-              style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
+              className="px-3 py-1.5 bg-transparent text-gray-100 border border-white/20 focus:border-white/40 focus:outline-none transition-all text-sm font-bold tracking-wider uppercase rounded-none"
+              style={{ fontFamily: "'Vorcas', sans-serif" }}
             >
               <option value="featured">Featured</option>
               <option value="price-low">Price: Low to High</option>
@@ -122,7 +114,7 @@ const Shop = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
             <Loader2 className="w-8 h-8 text-white animate-spin" />
-            <span className="text-xs text-gray-400 tracking-[0.2em] uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
+            <span className="text-sm text-gray-200 tracking-[0.2em] uppercase" style={{ fontFamily: "'Vorcas', sans-serif" }}>
               Loading...
             </span>
           </div>
@@ -136,8 +128,8 @@ const Shop = () => {
           </div>
         ) : (
           <div className="text-center py-24">
-            <Ghost className="w-12 h-12 mx-auto mb-4 text-gray-700" />
-            <p className="text-sm font-bold text-gray-500 tracking-[0.15em] uppercase" style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}>
+            <Ghost className="w-10 h-10 mx-auto mb-4 text-gray-500" />
+            <p className="text-base font-bold text-gray-200 tracking-[0.15em] uppercase" style={{ fontFamily: "'Vorcas', sans-serif" }}>
               No products found
             </p>
           </div>

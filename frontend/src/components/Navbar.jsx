@@ -18,10 +18,15 @@ const Navbar = () => {
     updateCartCount();
     window.addEventListener('cartUpdated', updateCartCount);
 
+    let rafId = null;
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (rafId !== null) return;
+      rafId = window.requestAnimationFrame(() => {
+        setScrolled(window.scrollY > 20);
+        rafId = null;
+      });
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -32,6 +37,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener('cartUpdated', updateCartCount);
       window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) window.cancelAnimationFrame(rafId);
       document.body.style.overflow = '';
     };
   }, [isOpen]);
@@ -50,11 +56,14 @@ const Navbar = () => {
   return (
     <>
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+      className={`fixed top-0 w-full z-[60] transition-all duration-500 ${
+        isOpen ? 'pointer-events-none opacity-0' : 'opacity-100'
+      } ${
         scrolled
           ? 'bg-black/90 backdrop-blur-xl border-b border-white/10'
           : 'bg-gradient-to-b from-black/70 to-transparent'
       }`}
+      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
     >
       <div className="w-full px-4 sm:px-8 lg:px-12">
         <div className="flex items-center justify-between h-20 sm:h-28">
@@ -69,20 +78,20 @@ const Navbar = () => {
                 onError={() => setLogoError(true)}
               />
             ) : (
-              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-cyan-400 via-magenta-500 to-yellow-400 shadow-[0_0_25px_rgba(236,72,153,0.4)]">
-                <span className="text-white font-black text-2xl sm:text-3xl" style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}>T</span>
+              <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-white">
+                <span className="text-black font-black text-2xl sm:text-3xl" style={{ fontFamily: "'Vorcas', 'Bungee', cursive" }}>T</span>
               </div>
             )}
             <div className="flex flex-col leading-none">
               <span
                 className="text-xl sm:text-2xl font-black tracking-wide trippy-text"
-                style={{ fontFamily: "'Another Nothing', 'Bungee', cursive" }}
+                style={{ fontFamily: "'Vorcas', 'Bungee', cursive" }}
               >
                 TRIPPYDRIP
               </span>
               <span
-                className="text-[9px] sm:text-[10px] tracking-[0.35em] uppercase text-gray-400 font-semibold mt-0.5"
-                style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
+                className="text-[10px] sm:text-[11px] tracking-[0.35em] uppercase text-gray-200 font-semibold mt-0.5"
+                style={{ fontFamily: "'Vorcas', sans-serif" }}
               >
                 EST. 2025
               </span>
@@ -99,9 +108,9 @@ const Navbar = () => {
                   className={`relative px-5 xl:px-6 py-2.5 text-base font-bold tracking-[0.15em] uppercase transition-all duration-300 ${
                     location.pathname === link.path
                       ? 'text-white'
-                      : 'text-gray-400 hover:text-white'
+                      : 'text-gray-200 hover:text-white'
                   }`}
-                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 700 }}
+                  style={{ fontFamily: "'Vorcas', sans-serif", fontWeight: 700 }}
                 >
                   {link.name}
                   {location.pathname === link.path && (
@@ -120,7 +129,7 @@ const Navbar = () => {
             >
               <ShoppingCart className="w-6 h-6 text-gray-300 group-hover:text-white transition-colors duration-300" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-magenta-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -129,8 +138,8 @@ const Navbar = () => {
             {user ? (
               <div className="flex items-center space-x-3">
                 <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-500 to-magenta-500 flex items-center justify-center">
-                    <User className="w-4 h-4 text-white" />
+                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center">
+                    <User className="w-4 h-4 text-black" />
                   </div>
                   <span className="max-w-[120px] truncate text-gray-300 text-sm hidden xl:block">{user.email}</span>
                 </div>
@@ -149,8 +158,8 @@ const Navbar = () => {
             ) : (
               <Link to="/login">
                 <Button
-                  className="bg-white text-black font-black text-sm tracking-[0.15em] uppercase px-7 py-2.5 rounded-sm hover:bg-cyan-400 hover:text-black transition-all duration-300 hover:scale-105"
-                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 800 }}
+                  className="bg-white text-black font-black text-sm tracking-[0.15em] uppercase px-7 py-2.5 rounded-sm hover:bg-zinc-200 hover:text-black transition-colors duration-300"
+                  style={{ fontFamily: "'Vorcas', sans-serif", fontWeight: 800 }}
                 >
                   Login
                 </Button>
@@ -163,7 +172,7 @@ const Navbar = () => {
             <Link to="/cart" className="relative p-2">
               <ShoppingCart className="w-6 h-6 text-white" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-magenta-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-white text-black text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -172,8 +181,8 @@ const Navbar = () => {
               <Link to="/login">
                 <Button
                   size="sm"
-                  className="bg-white text-black font-black text-[11px] tracking-[0.12em] uppercase px-5 py-2 rounded-sm hover:bg-cyan-400 transition-all"
-                  style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
+                  className="bg-white text-black font-black text-[11px] tracking-[0.12em] uppercase px-5 py-2 rounded-sm hover:bg-zinc-200 transition-colors"
+                  style={{ fontFamily: "'Vorcas', sans-serif" }}
                 >
                   Login
                 </Button>
@@ -226,20 +235,20 @@ const Navbar = () => {
               </div>
             )}
 
-            <nav className="space-y-6 text-center">
+            <nav className="flex flex-col items-center gap-8 text-center">
               {navLinks.map((link, index) => (
                 <Link
                   key={link.path}
                   to={link.path}
                   onClick={() => setIsOpen(false)}
-                  className={`block text-3xl sm:text-4xl font-black transition-all duration-500 trippy-menu-link ${
+                  className={`block text-4xl sm:text-5xl font-black leading-none transition-colors duration-300 trippy-menu-link ${
                     location.pathname === link.path
-                      ? 'text-cyan-400 scale-110'
-                      : 'text-white hover:text-cyan-400 hover:scale-105'
+                      ? 'text-white'
+                      : 'text-gray-300 hover:text-white'
                   }`}
                   style={{
-                    animationDelay: `${index * 0.1}s`,
-                    fontFamily: "'Another Nothing', 'Bungee', cursive",
+                    animationDelay: `${index * 0.08}s`,
+                    fontFamily: "'Vorcas', 'Bungee', cursive",
                   }}
                 >
                   {link.name}

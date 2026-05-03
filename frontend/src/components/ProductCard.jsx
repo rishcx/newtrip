@@ -24,7 +24,7 @@ const ProductCard = ({ product }) => {
         <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out hidden sm:block">
           <div
             className="w-full py-2.5 sm:py-3 bg-white text-black text-center text-xs sm:text-sm font-black tracking-[0.2em] uppercase hover:bg-cyan-400 transition-colors duration-200"
-            style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
+            style={{ fontFamily: "'Vorcas', sans-serif" }}
           >
             Quick View
           </div>
@@ -35,13 +35,13 @@ const ProductCard = ({ product }) => {
       <div className="space-y-1">
         <h3
           className="text-xs sm:text-base lg:text-lg font-bold text-white uppercase tracking-[0.05em] sm:tracking-[0.08em] leading-tight group-hover:text-cyan-400 transition-colors duration-300 line-clamp-2"
-          style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif", fontWeight: 700 }}
+          style={{ fontFamily: "'Vorcas', sans-serif", fontWeight: 700 }}
         >
           {product.name}
         </h3>
         <p
           className="text-sm sm:text-base text-gray-300 font-semibold"
-          style={{ fontFamily: "'Another Nothing', 'Rajdhani', sans-serif" }}
+          style={{ fontFamily: "'Vorcas', sans-serif" }}
         >
           ${product.price}.00
         </p>

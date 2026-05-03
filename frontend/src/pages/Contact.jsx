@@ -53,7 +53,7 @@ const Contact = () => {
     <div className="min-h-screen pt-28 relative z-[1]">
       {/* Hero */}
       <div className="relative py-14 sm:py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px]"></div>
         <div className="absolute inset-0">
           <div className="absolute top-0 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
           <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-magenta-500/10 rounded-full blur-3xl"></div>
@@ -72,7 +72,7 @@ const Contact = () => {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 sm:pb-20">
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]"></div>
+        <div className="absolute inset-0 bg-black/60 backdrop-blur-[4px]"></div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
           {/* Contact Info */}
           <div className="space-y-4 sm:space-y-6">

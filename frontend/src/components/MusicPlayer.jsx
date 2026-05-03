@@ -1,15 +1,18 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { Volume2, VolumeX } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { Volume2, VolumeX, Volume1 } from 'lucide-react';
 
 const YOUTUBE_VIDEO_ID = 'jSReLIp5Zxc';
 
 const MusicPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [volume, setVolume] = useState(30);
+  const [muted, setMuted] = useState(true);
   const [playerReady, setPlayerReady] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [expanded, setExpanded] = useState(false);
   const playerRef = useRef(null);
-  const containerRef = useRef(null);
   const apiLoaded = useRef(false);
+  const lastVolumeRef = useRef(30);
+  const collapseTimerRef = useRef(null);
 
   const initPlayer = useCallback(() => {
     if (playerRef.current) return;
@@ -29,12 +32,11 @@ const MusicPlayer = () => {
       },
       events: {
         onReady: () => {
-          playerRef.current.setVolume(30);
+          playerRef.current.setVolume(volume);
           setPlayerReady(true);
           setLoading(false);
-          // Auto-play since user just clicked
           playerRef.current.playVideo();
-          setIsPlaying(true);
+          setMuted(false);
         },
         onStateChange: (event) => {
           if (event.data === window.YT.PlayerState.ENDED) {
@@ -44,9 +46,8 @@ const MusicPlayer = () => {
         },
       },
     });
-  }, []);
+  }, [volume]);
 
-  // Only load YouTube API when user first clicks play
   const loadYouTubeAPI = useCallback(() => {
     if (apiLoaded.current) return;
     apiLoaded.current = true;
@@ -66,53 +67,116 @@ const MusicPlayer = () => {
     };
   }, [initPlayer]);
 
-  const toggleMusic = () => {
+  useEffect(() => {
+    if (!playerReady || !playerRef.current) return;
+    playerRef.current.setVolume(volume);
+    if (volume === 0 && !muted) {
+      playerRef.current.pauseVideo();
+      setMuted(true);
+    } else if (volume > 0 && muted) {
+      playerRef.current.playVideo();
+      setMuted(false);
+    }
+  }, [volume, playerReady, muted]);
+
+  useEffect(() => () => {
+    if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+  }, []);
+
+  const handleSlider = (e) => {
+    const v = Number(e.target.value);
+    setVolume(v);
+    if (v > 0) lastVolumeRef.current = v;
+    if (!apiLoaded.current && v > 0) loadYouTubeAPI();
+  };
+
+  const toggleMute = () => {
     if (!apiLoaded.current) {
       loadYouTubeAPI();
+      setExpanded(true);
       return;
     }
-
-    if (!playerRef.current || !playerReady) return;
-
-    if (isPlaying) {
-      playerRef.current.pauseVideo();
+    if (muted) {
+      const restore = lastVolumeRef.current || 30;
+      setVolume(restore);
     } else {
-      playerRef.current.playVideo();
+      lastVolumeRef.current = volume || 30;
+      setVolume(0);
     }
-    setIsPlaying(!isPlaying);
   };
+
+  const onIconClick = () => {
+    setExpanded((e) => !e);
+    toggleMute();
+  };
+
+  const expand = () => {
+    if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    setExpanded(true);
+  };
+  const scheduleCollapse = () => {
+    if (collapseTimerRef.current) clearTimeout(collapseTimerRef.current);
+    collapseTimerRef.current = setTimeout(() => setExpanded(false), 600);
+  };
+
+  const Icon = loading
+    ? null
+    : muted || volume === 0
+    ? VolumeX
+    : volume < 50
+    ? Volume1
+    : Volume2;
 
   return (
     <>
-      {/* Hidden YouTube player — only rendered after first interaction */}
       <div style={{ position: 'fixed', top: -9999, left: -9999, width: 1, height: 1, overflow: 'hidden', pointerEvents: 'none' }}>
-        <div id="yt-music-player" ref={containerRef} />
+        <div id="yt-music-player" />
       </div>
 
-      {/* Toggle button */}
-      <button
-        onClick={toggleMusic}
-        className={`fixed bottom-6 right-6 z-50 p-3 rounded-full border transition-all duration-500 group ${
-          isPlaying
-            ? 'bg-cyan-500/20 border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.4)]'
-            : 'bg-zinc-900/80 border-zinc-700 hover:border-cyan-500/30'
-        } backdrop-blur-sm`}
-        title={loading ? 'Loading...' : isPlaying ? 'Pause music' : 'Play music'}
+      <div
+        onMouseEnter={expand}
+        onMouseLeave={scheduleCollapse}
+        className="fixed bottom-6 right-6 z-50 flex items-center justify-end"
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
       >
-        {loading ? (
-          <div className="w-5 h-5 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-        ) : isPlaying ? (
-          <Volume2 className="w-5 h-5 text-cyan-400 animate-pulse" />
-        ) : (
-          <VolumeX className="w-5 h-5 text-gray-400 group-hover:text-cyan-400 transition-colors" />
-        )}
-        {isPlaying && (
-          <span className="absolute -top-1 -right-1 w-3 h-3">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 animate-ping"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-cyan-500"></span>
-          </span>
-        )}
-      </button>
+        <div
+          className={`flex items-center gap-2 rounded-full bg-zinc-900/80 border border-white/10 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.5)] overflow-hidden transition-[width,padding] duration-300 ease-out`}
+          style={{
+            width: expanded ? 156 : 40,
+            padding: expanded ? '6px 10px 6px 6px' : '6px',
+          }}
+        >
+          <button
+            onClick={onIconClick}
+            className="flex items-center justify-center w-7 h-7 rounded-full hover:bg-white/10 transition-colors flex-shrink-0"
+            title={muted ? 'Unmute' : 'Mute'}
+            aria-label={muted ? 'Unmute' : 'Mute'}
+          >
+            {loading ? (
+              <div className="w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <Icon className={`w-4 h-4 ${muted || volume === 0 ? 'text-gray-400' : 'text-white'}`} />
+            )}
+          </button>
+
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={volume}
+            onChange={handleSlider}
+            aria-label="Volume"
+            tabIndex={expanded ? 0 : -1}
+            className="music-volume-slider flex-1"
+            style={{
+              opacity: expanded ? 1 : 0,
+              pointerEvents: expanded ? 'auto' : 'none',
+              transition: 'opacity 200ms ease',
+              background: `linear-gradient(to right, #ffffff 0%, #ffffff ${volume}%, rgba(255,255,255,0.18) ${volume}%, rgba(255,255,255,0.18) 100%)`,
+            }}
+          />
+        </div>
+      </div>
     </>
   );
 };
