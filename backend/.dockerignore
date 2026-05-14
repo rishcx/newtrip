@@ -1,0 +1,13 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.env.*
+.git/
+.gitignore
+server_old.py
+node_modules/
+package-lock.json
+*.md
+.DS_Store
